@@ -10,8 +10,18 @@ import {
 } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { BasicLayout } from "@/components/layouts/BasicLayout";
+import { usePathname, useRouter } from "next/navigation";
 import { X } from "lucide-react";
+import { BlogCard } from "@/components/BlogCard";
+import { sanityFetch } from "@/sanity/lib/fetch";
+import SortFeature from "@/components/SortFeature";
+import {
+  postsQuery,
+  domainPostsQuery,
+  taskPostsQuery,
+  countryPostsQuery,
+  organizationPostsQuery,
+} from "../../sanity/lib/queries";
 
 export default function Page() {
   const [isLoading, setIsLoading] = useState(true);
@@ -20,6 +30,16 @@ export default function Page() {
   const [filters, setFilters] = useState<Record<string, string[]>>({});
   const [loadedCount, setLoadedCount] = useState(9);
   const [isMobile, setIsMobile] = useState(false);
+  const [blogPosts, setBlogPosts] = useState([]);
+  const pathname = usePathname();
+  const router = useRouter();
+  const [sortOption, setSortOption] = useState<{
+    field: string;
+    order: "asc" | "desc";
+  }>({
+    field: "Model",
+    order: "asc",
+  });
 
   // Track window size to determine if mobile view
   useEffect(() => {
@@ -63,8 +83,7 @@ export default function Page() {
   const handleScroll = () => {
     const scrollPosition =
       window.innerHeight + document.documentElement.scrollTop;
-    const bottomPosition =
-      document.documentElement.offsetHeight - 100;
+    const bottomPosition = document.documentElement.offsetHeight - 100;
 
     if (scrollPosition >= bottomPosition && loadedCount < models.length) {
       setLoadedCount((prevCount) => prevCount + 9);
@@ -72,13 +91,54 @@ export default function Page() {
   };
 
   useEffect(() => {
+    const fetchBlogPosts = async () => {
+      try {
+        const parts = pathname.split("/").filter(Boolean); // ["models", "task", "chat"]
+        if (parts.length >= 3) {
+          const [_, filterType, filterVal] = parts;
+          let query;
+          switch (filterType) {
+            case "task":
+              query = taskPostsQuery;
+              break;
+            case "domain":
+              query = domainPostsQuery;
+              break;
+            case "country":
+              query = countryPostsQuery;
+              break;
+            case "organization":
+              query = organizationPostsQuery;
+              break;
+            default:
+              query = postsQuery;
+          }
+          const posts = await sanityFetch<{ title: string }[]>({
+            query,
+            params: { filterValue: decodeURIComponent(filterVal) },
+          });
+          setBlogPosts(posts ?? []);
+        } else {
+          setBlogPosts([]);
+        }
+      } catch (error) {
+        console.error("Error fetching blog posts:", error);
+        setBlogPosts([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchBlogPosts();
+  }, [pathname]);
+
+  useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loadedCount, models.length]);
 
   const renderSelectedFilters = () => {
-    const selectedFilters = Object.entries(filters).flatMap(([category, values]) =>
-      values.map((value) => `${category}: ${value}`)
+    const selectedFilters = Object.entries(filters).flatMap(
+      ([category, values]) => values.map((value) => `${category}: ${value}`),
     );
 
     return selectedFilters.length > 0 ? (
@@ -86,7 +146,7 @@ export default function Page() {
         {selectedFilters.map((filter, index) => (
           <span
             key={index}
-            className="bg-blue-100 text-blue-600 px-3 py-1 rounded-md text-xs"
+            className="rounded-md bg-blue-100 px-3 py-1 text-xs text-blue-600"
           >
             {filter}
           </span>
@@ -98,53 +158,65 @@ export default function Page() {
   };
 
   return (
-    <BasicLayout>
-      <SidebarProvider>
-        {/* AppSidebar with collapsible functionality */}
-        <AppSidebar filters={filters} setFilters={setFilters} />
-        <SidebarInset>
-          <header className="flex sticky top-0 bg-background h-16 items-center px-4 justify-between z-10 group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-            <div className="flex items-center gap-2 px-4">
-              <SidebarTrigger className="-ml-1" />
-              <Separator orientation="vertical" className="mr-2 h-4" />
-              {/* Breadcrumb or Selected Filters */}
-              <nav aria-label="breadcrumb">
-                <ol className="flex text-sm text-muted-foreground">
-                  {isMobile && Object.values(filters).some((f) => f.length > 0) ? (
-                    renderSelectedFilters()
-                  ) : (
-                    <>
-                      <li className="flex items-center">
-                        <a href="/" className="hover:underline">
-                          Home
-                        </a>
-                        <span className="mx-2">{'/'}</span>
-                      </li>
-                      <li className="flex items-center">
-                        <span>AI Models</span>
-                      </li>
-                    </>
-                  )}
-                </ol>
-              </nav>
-  </div>
-</header>
-
-          <div className="p-4">
-            {isLoading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {Array.from({ length: 9 }).map((_, index) => (
-                  <Skeleton key={index} className="w-[320px] h-[180px] rounded-lg" />
-                ))}
-              </div>
-            ) : error ? (
-              <p className="text-red-500">{error}</p>
-            ) : (
-              <ModelCard models={models.slice(0, loadedCount)} filters={filters} />
-            )}
+    <SidebarProvider>
+      {/* AppSidebar with collapsible functionality */}
+      <AppSidebar filters={filters} setFilters={setFilters} />
+      <SidebarInset>
+        <header className="sticky top-0 z-10 flex h-16 items-center justify-between bg-background px-4 group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+          <div className="flex items-center gap-2 px-4">
+            <SidebarTrigger className="-ml-1" />
+            <Separator orientation="vertical" className="mr-2 h-4" />
+            {/* Breadcrumb or Selected Filters */}
+            <nav aria-label="breadcrumb">
+              <ol className="flex text-sm text-muted-foreground">
+                {isMobile &&
+                Object.values(filters).some((f) => f.length > 0) ? (
+                  renderSelectedFilters()
+                ) : (
+                  <>
+                    <li className="flex items-center">
+                      <a href="/" className="hover:underline">
+                        Home
+                      </a>
+                      <span className="mx-2">{"/"}</span>
+                    </li>
+                    <li className="flex items-center">
+                      <span>AI Models</span>
+                    </li>
+                  </>
+                )}
+              </ol>
+            </nav>
           </div>
-        </SidebarInset>
-      </SidebarProvider>
-    </BasicLayout>
+          <div className="ml-auto">
+            <SortFeature onSortChange={(option) => setSortOption(option)} />
+          </div>
+        </header>
+
+        <div className="p-4">
+          {blogPosts.map((post) => (
+            <BlogCard key={post._id} post={post} />
+          ))}
+          {isLoading ? (
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 9 }).map((_, index) => (
+                <Skeleton
+                  key={index}
+                  className="h-[180px] w-[320px] rounded-lg"
+                />
+              ))}
+            </div>
+          ) : error ? (
+            <p className="text-red-500">{error}</p>
+          ) : (
+            <ModelCard
+              models={models.slice(0, loadedCount)}
+              filters={filters}
+              sortOption={sortOption}
+            />
+          )}
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

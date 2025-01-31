@@ -1,66 +1,40 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import Link from "next/link";
+import { usePostHog } from "posthog-js/react";
 import { MenuIcon, XIcon } from "lucide-react";
-import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/utils";
+import { ModeToggle } from "@/components/DarkModeToggle";
 
 const navigation = [
   { name: "Features", href: "/#features" },
   { name: "FAQ", href: "/#faq" },
-  { name: "AI Models", href: "/models", target: "_blank" as const },
-  { name: "Contribute", href: "/contribute", target: "_blank" as const },
-  { name: "Blogs", href: "/blogs" },
+  { name: "Open Source", href: "/github", target: "_blank" as const },
+  { name: "Affiliates", href: "/affiliates", target: "_blank" as const },
+  { name: "Pricing", href: "/#pricing" },
 ];
 
 export function Header({ className }: { className?: string }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
-  const [scroll, setScroll] = useState(false); // Track if user has scrolled
-  const [lastScrollY, setLastScrollY] = useState(0); // Track last scroll position
-
-  const handleScroll = () => {
-    const currentScrollY = window.scrollY;
-
-    if (currentScrollY > lastScrollY && currentScrollY > 20) {
-      setIsVisible(false); // Hide header on scroll down
-    } else if (currentScrollY < lastScrollY) {
-      setIsVisible(true); // Show header on scroll up
-    }
-
-    setScroll(currentScrollY > 0); // Set scroll state based on position
-    setLastScrollY(currentScrollY); // Update last scroll position
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [lastScrollY]);
+  const posthog = usePostHog();
 
   return (
-    <header
-      className={cn(
-        "sticky top-0 left-0 z-50 transition-transform duration-300",
-        className,
-        isVisible ? "translate-y-0" : "-translate-y-full", // Show or hide header
-        scroll
-          ? "bg-white bg-opacity-70 backdrop-blur-lg shadow-md" // Add shadow when scrolling
-          : "bg-transparent" // No shadow at the top
-      )}
-    >
+    <header className={cn("absolute inset-x-0 top-0 z-50 py-2", className)}>
       <nav
-        className="flex items-center justify-between px-6 py-4 lg:px-8"
+        className="mx-auto flex max-w-7xl items-center justify-between px-6"
         aria-label="Global"
       >
         <div className="flex lg:flex-1">
           <Link href="/" className="-m-1.5 p-1.5">
-            <span className="sr-only">AIPortalX</span>
-            <Logo className="h-4 w-auto" />
+            <span className="sr-only">AiPortalX</span>
+            <img
+              src="/aiportalxlogo.svg"
+              alt="AIPortalX Logo"
+              className="h-5 w-auto"
+            />
           </Link>
         </div>
         <div className="flex lg:hidden">
@@ -86,12 +60,37 @@ export function Header({ className }: { className?: string }) {
             </Link>
           ))}
         </div>
+        <ModeToggle />
         <div className="hidden gap-2 lg:flex lg:flex-1 lg:justify-end">
           <Button size="sm" variant="outline" className="rounded-full" asChild>
-            <Link href="/models" onClick={() => setMobileMenuOpen(false)}>
-              Explore AI
+            <Link
+              href="/login"
+              onClick={() => {
+                posthog.capture("Clicked Log In", { position: "top-nav" });
+                setMobileMenuOpen(false);
+              }}
+            >
+              Log in
             </Link>
           </Button>
+          <Button size="sm" variant="blue" className="rounded-full" asChild>
+            <Link
+              href="/login"
+              onClick={() => {
+                posthog.capture("Clicked Sign Up", { position: "top-nav" });
+                setMobileMenuOpen(false);
+              }}
+            >
+              Sign up
+            </Link>
+          </Button>
+
+          {/* <Link
+            href="/login"
+            className="text-sm font-semibold leading-6 text-gray-900"
+          >
+            Log in <span aria-hidden="true">&rarr;</span>
+          </Link> */}
         </div>
       </nav>
       <Dialog
@@ -103,9 +102,13 @@ export function Header({ className }: { className?: string }) {
         <div className="fixed inset-0 z-50" />
         <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
-            <Link href="#" className="-m-1.5 p-1.5">
-              <span className="sr-only">AIPortalX</span>
-              <Logo className="h-4 w-auto" />
+            <Link href="/" className="-m-1.5 p-1.5">
+              <span className="sr-only">AiPortalX</span>
+              <img
+                src="/aiportalxlogo.svg"
+                alt="AIPortalX Logo"
+                className="h-4 w-auto"
+              />
             </Link>
             <button
               type="button"
@@ -132,9 +135,12 @@ export function Header({ className }: { className?: string }) {
               </div>
               <div className="py-6">
                 <Link
-                  href="/#"
+                  href="/login"
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={() => {
+                    posthog.capture("Clicked Log In", { position: "top-nav" });
+                    setMobileMenuOpen(false);
+                  }}
                 >
                   Log in
                 </Link>

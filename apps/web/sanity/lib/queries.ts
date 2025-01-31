@@ -31,6 +31,118 @@ export const postQuery = groq`*[_type == "post" && slug.current == $slug][0]{
     "authorTwitter": author->twitter
   }`;
 
+// Get posts by task filter value
+export const taskPostsQuery = groq`*[_type == "task" && filterValue == $filterValue] | order(_createdAt desc)  {
+  _id,
+  title,
+  description,
+  mainImage{
+    asset->{
+      _id,
+      url
+    },
+    alt
+  },
+  body[]{
+    ...,
+    _type == "image" => {
+      ...,
+      asset->{
+        ...,
+        metadata
+      }
+    }
+  },
+  "authorName": author->name,
+  "authorImage": author->image,
+  "authorTwitter": author->twitter,
+  filterValue
+}`;
+
+// Get posts by domain filter value
+export const domainPostsQuery = groq`*[_type == "domain" && filterValue == $filterValue] {
+  _id,
+  title,
+  description,
+  mainImage{
+    asset->{
+      _id,
+      url
+    },
+    alt
+  },
+  body[]{
+    ...,
+    _type == "image" => {
+      ...,
+      asset->{
+        ...,
+        metadata
+      }
+    }
+  },
+  "authorName": author->name,
+  "authorImage": author->image,
+  "authorTwitter": author->twitter,
+  filterValue
+}`;
+
+// Get posts by country filter value
+export const countryPostsQuery = groq`*[_type == "country" && filterValue == $filterValue] {
+  _id,
+  title,
+  description,
+  mainImage{
+    asset->{
+      _id,
+      url
+    },
+    alt
+  },
+  body[]{
+    ...,
+    _type == "image" => {
+      ...,
+      asset->{
+        ...,
+        metadata
+      }
+    }
+  },
+  "authorName": author->name,
+  "authorImage": author->image,
+  "authorTwitter": author->twitter,
+  filterValue
+}`;
+
+// Get posts by organization filter value
+export const organizationPostsQuery = groq`*[_type == "organization" && filterValue == $filterValue] {
+  _id,
+  title,
+  description,
+  mainImage{
+    asset->{
+      _id,
+      url
+    },
+    alt
+  },
+  body[]{
+    ...,
+    _type == "image" => {
+      ...,
+      asset->{
+        ...,
+        metadata
+      }
+    }
+  },
+  "authorName": author->name,
+  "authorImage": author->image,
+  "authorTwitter": author->twitter,
+  filterValue
+}`;
+
 // Get all post slugs
 export const postPathsQuery = groq`*[_type == "post" && defined(slug.current)][]{
     "params": { "slug": slug.current }

@@ -11,6 +11,7 @@ import { env } from "@/env";
 import { GlobalProviders } from "@/providers/GlobalProviders";
 import { UTM } from "@/app/utm";
 import { startupImage } from "@/app/startup-image";
+import { ThemeProvider } from "@/components/theme-provider"; // Import the ThemeProvider
 
 const inter = Inter({
   subsets: ["latin"],
@@ -45,12 +46,10 @@ export const metadata: Metadata = {
     creator: "@niyaziwaqar",
   },
   metadataBase: new URL(env.NEXT_PUBLIC_BASE_URL),
-  // issues with robots.txt: https://github.com/vercel/next.js/issues/58615#issuecomment-1852457285
   robots: {
     index: true,
     follow: true,
   },
-  // pwa
   applicationName: "AIPortalX",
   appleWebApp: {
     capable: true,
@@ -61,16 +60,11 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
-  // safe area for iOS PWA
   other: {
     "mobile-web-app-capable": "yes",
     "apple-mobile-web-app-capable": "yes",
     "apple-mobile-web-app-status-bar-style": "white-translucent",
   },
-};
-
-export const viewport = {
-  themeColor: "#FFF",
 };
 
 export default async function RootLayout({
@@ -83,12 +77,19 @@ export default async function RootLayout({
       <body
         className={`h-full ${inter.variable} ${calFont.variable} font-sans antialiased`}
       >
-        <PostHogProvider>
-          <Suspense>
-            <PostHogPageview />
-          </Suspense>
-          <GlobalProviders>{children}</GlobalProviders>
-        </PostHogProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <PostHogProvider>
+            <Suspense>
+              <PostHogPageview />
+            </Suspense>
+            <GlobalProviders>{children}</GlobalProviders>
+          </PostHogProvider>
+        </ThemeProvider>
         <Analytics />
         <AxiomWebVitals />
         <UTM />

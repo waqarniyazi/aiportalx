@@ -11,8 +11,29 @@ import {
 } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import SearchBar from "@/components/SearchBar";
-import BlogCard from "@/components/BlogCard";
+//import SearchBar from "@/components/SearchBar";
+import { BlogCard } from "@/components/BlogCard";
+import SortFeature from "@/components/SortFeature";
+import {
+  postsQuery,
+  domainPostsQuery,
+  taskPostsQuery,
+  countryPostsQuery,
+  organizationPostsQuery,
+} from "../../../sanity/lib/queries";
+import { sanityFetch } from "../../../sanity/lib/fetch";
+
+interface BlogPost {
+  _id: string;
+  title: string;
+  description: string;
+  mainImage: any;
+  body: any;
+  authorName: string;
+  authorImage: any;
+  authorTwitter: string;
+  filterValue: string;
+}
 
 export default function ModelsPage() {
   const [models, setModels] = useState([]);
@@ -20,6 +41,14 @@ export default function ModelsPage() {
   const [filters, setFilters] = useState<Record<string, string[]>>({});
   const pathname = usePathname();
   const router = useRouter();
+  const [blogPosts, setBlogPosts] = useState([]); // For blog posts
+  const [sortOption, setSortOption] = useState<{
+    field: string;
+    order: "asc" | "desc";
+  }>({
+    field: "Model",
+    order: "asc",
+  });
 
   useEffect(() => {
     const fetchModels = async () => {
@@ -63,6 +92,47 @@ export default function ModelsPage() {
     applyFiltersFromUrl();
   }, [pathname]);
 
+  useEffect(() => {
+    const fetchBlogPosts = async () => {
+      try {
+        const parts = pathname.split("/").filter(Boolean); // ["models", "task", "chat"]
+        if (parts.length >= 3) {
+          const [_, filterType, filterVal] = parts;
+          let query;
+          switch (filterType) {
+            case "task":
+              query = taskPostsQuery;
+              break;
+            case "domain":
+              query = domainPostsQuery;
+              break;
+            case "country":
+              query = countryPostsQuery;
+              break;
+            case "organization":
+              query = organizationPostsQuery;
+              break;
+            default:
+              query = postsQuery;
+          }
+          const posts = await sanityFetch<{ title: string }[]>({
+            query,
+            params: { filterValue: decodeURIComponent(filterVal) },
+          });
+          setBlogPosts(posts ?? []);
+        } else {
+          setBlogPosts([]);
+        }
+      } catch (error) {
+        console.error("Error fetching blog posts:", error);
+        setBlogPosts([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchBlogPosts();
+  }, [pathname]);
+
   const updateFilter = ({ type, value }: { type: string; value: string }) => {
     const newFilters = { ...filters };
     if (!newFilters[type]) newFilters[type] = [];
@@ -94,7 +164,7 @@ export default function ModelsPage() {
         onFilterChange={updateFilter}
       />
       <SidebarInset>
-        <header className="sticky top-0 z-10 flex h-16 items-center justify-between bg-background px-4">
+        <header className="sticky top-0 z-50 flex w-full items-center justify-between bg-background px-4 py-2">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />
@@ -113,12 +183,14 @@ export default function ModelsPage() {
             </nav>
           </div>
           <div className="ml-auto">
-            <SearchBar />
+            <SortFeature onSortChange={(option) => setSortOption(option)} />
           </div>
         </header>
 
         <div className="p-4">
-          <BlogCard filters={filters} />
+          {blogPosts.map((post) => (
+            <BlogCard key={post._id} post={post} />
+          ))}
           {isLoading ? (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {Array.from({ length: 9 }).map((_, index) => (
@@ -129,7 +201,11 @@ export default function ModelsPage() {
               ))}
             </div>
           ) : (
-            <ModelCard models={models} filters={filters} />
+            <ModelCard
+              models={models}
+              filters={filters}
+              sortOption={sortOption}
+            />
           )}
         </div>
       </SidebarInset>
