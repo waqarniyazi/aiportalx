@@ -98,11 +98,11 @@ export function CompareDrawer({ isOpen, onClose, model }: CompareDrawerProps) {
           )}
         </div>
         <DrawerFooter className="flex flex-col gap-2">
-          <Button variant="outline" onClick={handleCompare}>
+          <Button variant="default" onClick={handleCompare}>
             Compare
           </Button>
           <DrawerClose asChild>
-            <Button variant="outline">Close</Button>
+            <Button variant="outline">Cancel</Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>

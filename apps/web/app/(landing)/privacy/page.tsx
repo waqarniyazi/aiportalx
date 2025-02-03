@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { PrivacyContent } from "@/app/(landing)/privacy/content";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy - Inbox Zero",
-  description: "Privacy Policy - Inbox Zero",
+  title: "Privacy Policy - AIPortalX",
+  description: "Privacy Policy - AIPortalX",
   alternates: { canonical: "/privacy" },
 };
 

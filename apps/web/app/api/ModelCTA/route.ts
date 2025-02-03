@@ -22,7 +22,7 @@ const formSubmissionSchema = new mongoose.Schema(
   {
     fullName: { type: String, required: true },
     email: { type: String, required: true },
-    myNumber: { type: Number, required: true },
+    myNumber: { type: String, required: true },
     dateOfBirth: { type: Date, required: true },
     company: { type: String, required: true },
     industry: { type: String, required: true },
@@ -39,12 +39,8 @@ const FormSubmission =
 
 export async function POST(request: Request) {
   try {
-    // Log the raw request body for debugging
-    const rawBody = await request.text();
-    console.log("Raw request body:", rawBody);
-
     // Parse the JSON body
-    const formData = JSON.parse(rawBody);
+    const formData = await request.json();
     console.log("Parsed form data:", formData);
 
     // Validate payload (basic check)

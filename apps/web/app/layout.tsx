@@ -12,6 +12,13 @@ import { GlobalProviders } from "@/providers/GlobalProviders";
 import { UTM } from "@/app/utm";
 import { startupImage } from "@/app/startup-image";
 import { ThemeProvider } from "@/components/theme-provider"; // Import the ThemeProvider
+import {
+  ClerkProvider,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -73,30 +80,32 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full">
-      <body
-        className={`h-full ${inter.variable} ${calFont.variable} font-sans antialiased`}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
+    <ClerkProvider>
+      <html lang="en" className="h-full">
+        <body
+          className={`h-full ${inter.variable} ${calFont.variable} font-sans antialiased`}
         >
-          <PostHogProvider>
-            <Suspense>
-              <PostHogPageview />
-            </Suspense>
-            <GlobalProviders>{children}</GlobalProviders>
-          </PostHogProvider>
-        </ThemeProvider>
-        <Analytics />
-        <AxiomWebVitals />
-        <UTM />
-        {env.NEXT_PUBLIC_GTM_ID ? (
-          <GoogleTagManager gtmId={env.NEXT_PUBLIC_GTM_ID} />
-        ) : null}
-      </body>
-    </html>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <PostHogProvider>
+              <Suspense>
+                <PostHogPageview />
+              </Suspense>
+              <GlobalProviders>{children}</GlobalProviders>
+            </PostHogProvider>
+          </ThemeProvider>
+          <Analytics />
+          <AxiomWebVitals />
+          <UTM />
+          {env.NEXT_PUBLIC_GTM_ID ? (
+            <GoogleTagManager gtmId={env.NEXT_PUBLIC_GTM_ID} />
+          ) : null}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { BasicLayout } from "components/layouts/BasicLayout";
+import { BlogLayout } from "@/components/layouts/BlogLayout";
 import ModelPageContent from "./modelpageheader";
 import ModelInfo from "./modelinfo";
 import Infosidebar from "./infosidebar";
@@ -33,7 +33,7 @@ export default async function ModelPage({ params }: ModelPageProps) {
     const modelData = await fetchModelData(organization, model);
 
     return (
-      <BasicLayout>
+      <BlogLayout>
         <ModelPageContent modelData={modelData} />
         <div className="flex flex-col divide-y divide-gray-200 md:flex-row-reverse md:divide-x-0 md:divide-y-0">
           {/* Infosidebar */}
@@ -45,14 +45,14 @@ export default async function ModelPage({ params }: ModelPageProps) {
             <ModelInfo modelData={modelData} />
           </div>
         </div>
-      </BasicLayout>
+      </BlogLayout>
     );
   } catch (error) {
     console.error("❌ Error fetching model:", error);
     return (
-      <BasicLayout>
+      <BlogLayout>
         <p className="text-red-500">❌ Error fetching model data</p>
-      </BasicLayout>
+      </BlogLayout>
     );
   }
 }

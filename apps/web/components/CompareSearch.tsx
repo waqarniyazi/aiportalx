@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -19,8 +19,15 @@ export default function CompareSearch({ onSelectModel }: CompareSearchProps) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Auto-focus on mount so that when Plus is clicked, the input gets focus.
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   useEffect(() => {
+    // Always show the dropdown on focus even if query is empty.
     if (query.trim() === "") {
       setResults([]);
       return;
@@ -28,7 +35,7 @@ export default function CompareSearch({ onSelectModel }: CompareSearchProps) {
 
     const fetchResults = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/search`, {
+        const res = await axios.get("http://localhost:5000/api/search", {
           params: { query },
         });
         setResults(res.data);
@@ -50,6 +57,7 @@ export default function CompareSearch({ onSelectModel }: CompareSearchProps) {
           <Search className="h-5 w-5" />
         </span>
         <Input
+          ref={inputRef}
           type="text"
           placeholder="Search models to compare..."
           value={query}
@@ -60,29 +68,36 @@ export default function CompareSearch({ onSelectModel }: CompareSearchProps) {
         />
       </div>
 
-      {showDropdown && results.length > 0 && (
+      {showDropdown && (
         <div className="absolute z-10 mt-1 max-h-60 w-full overflow-y-auto rounded-md border bg-white shadow-lg">
-          {results.map((result, index) => (
-            <div
-              key={index}
-              onClick={() => onSelectModel(result)}
-              className="flex cursor-pointer items-center p-2 hover:bg-gray-100"
-            >
-              <Avatar className="h-10 w-10">
-                <AvatarImage
-                  src={`/OrganizationIcons/${result.Organization[0].toLowerCase().replace(/\s+/g, "_")}.png`}
-                  alt={result.Organization[0]}
-                />
-                <AvatarFallback>{result.Model[0]}</AvatarFallback>
-              </Avatar>
-              <div className="ml-3">
-                <p className="font-medium">{result.Model}</p>
-                <p className="text-sm text-gray-500">
-                  By {result.Organization[0]}
-                </p>
+          {results.length > 0 ? (
+            results.map((result, index) => (
+              <div
+                key={index}
+                onMouseDown={() => onSelectModel(result)}
+                className="flex cursor-pointer items-center p-2 hover:bg-gray-100"
+              >
+                <Avatar className="h-10 w-10">
+                  <AvatarImage
+                    src={`/OrganizationIcons/${result.Organization[0]
+                      .toLowerCase()
+                      .replace(/\s+/g, "_")}.png`}
+                    alt={result.Organization[0]}
+                  />
+                  <AvatarFallback>{result.Model[0]}</AvatarFallback>
+                </Avatar>
+                <div className="ml-3">
+                  <p className="font-medium">{result.Model}</p>
+                  <p className="text-sm text-gray-500">
+                    By {result.Organization[0]}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            // Renders a blank dropdown if no results.
+            <div className="p-2 text-gray-500">No models found.</div>
+          )}
         </div>
       )}
     </div>

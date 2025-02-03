@@ -1,4 +1,14 @@
-export { GET, POST } from "./auth";
+import { NextResponse } from "next/server";
+
+export async function GET(request: Request) {
+  return NextResponse.json({ message: "GET method works" });
+}
+
+export async function POST(request: Request) {
+  return NextResponse.json({ message: "POST method works" });
+}
+
+//export { GET, POST } from "./auth";
 // export const runtime = "edge" // optional
 
 // This code was used in the past to reask for consent when signing in with Google.

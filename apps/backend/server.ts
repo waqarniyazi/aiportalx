@@ -98,21 +98,25 @@ const ensureArray = (value: string | string[] | undefined): string[] => {
 
 app.get("/api/models", async (req: Request, res: Response) => {
   try {
-    const { Task, Domain, Organization, Country } = req.query as Record<
+    const { slugs, Task, Domain, Organization, Country } = req.query as Record<
       string,
       string | string[]
     >;
 
     const query: any = {};
 
-    if (Task) query.Task = { $in: ensureArray(Task) };
-    if (Domain) query.Domain = { $in: ensureArray(Domain) };
-    if (Organization) query.Organization = { $in: ensureArray(Organization) };
-    if (Country)
-      query["Country (from Organization)"] = { $in: ensureArray(Country) };
+    // If slugs parameter is provided, filter by Model names.
+    if (slugs) {
+      query.Model = { $in: ensureArray(slugs) };
+    } else {
+      if (Task) query.Task = { $in: ensureArray(Task) };
+      if (Domain) query.Domain = { $in: ensureArray(Domain) };
+      if (Organization) query.Organization = { $in: ensureArray(Organization) };
+      if (Country)
+        query["Country (from Organization)"] = { $in: ensureArray(Country) };
+    }
 
     const models = await Model.find(query);
-
     res.status(200).json(models);
   } catch (error) {
     console.error("❌ Error fetching models:", error);

@@ -37,11 +37,52 @@ module.exports = {
   				to: {
   					height: 0
   				}
+  			},
+  			marquee: {
+  				from: {
+  					transform: 'translateX(0)'
+  				},
+  				to: {
+  					transform: 'translateX(calc(-100% - var(--gap)))'
+  				}
+  			},
+  			'marquee-vertical': {
+  				from: {
+  					transform: 'translateY(0)'
+  				},
+  				to: {
+  					transform: 'translateY(calc(-100% - var(--gap)))'
+  				}
+  			},
+  			meteor: {
+  				'0%': {
+  					transform: 'rotate(215deg) translateX(0)',
+  					opacity: '1'
+  				},
+  				'70%': {
+  					opacity: '1'
+  				},
+  				'100%': {
+  					transform: 'rotate(215deg) translateX(-500px)',
+  					opacity: '0'
+  				}
+  			},
+  			rainbow: {
+  				'0%': {
+  					'background-position': '0%'
+  				},
+  				'100%': {
+  					'background-position': '200%'
+  				}
   			}
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out'
+  			'accordion-up': 'accordion-up 0.2s ease-out',
+  			marquee: 'marquee var(--duration) infinite linear',
+  			'marquee-vertical': 'marquee-vertical var(--duration) linear infinite',
+  			meteor: 'meteor 5s linear infinite',
+  			rainbow: 'rainbow var(--speed, 2s) infinite linear'
   		},
   		fontFamily: {
   			cal: [
@@ -154,7 +195,12 @@ module.exports = {
   				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
   				border: 'hsl(var(--sidebar-border))',
   				ring: 'hsl(var(--sidebar-ring))'
-  			}
+  			},
+  			'color-1': 'hsl(var(--color-1))',
+  			'color-2': 'hsl(var(--color-2))',
+  			'color-3': 'hsl(var(--color-3))',
+  			'color-4': 'hsl(var(--color-4))',
+  			'color-5': 'hsl(var(--color-5))'
   		},
   		boxShadow: {
   			'tremor-input': '0 1px 2px 0 rgb(0 0 0 / 0.05)',
@@ -170,48 +216,67 @@ module.exports = {
   			'tremor-full': '9999px'
   		},
   		fontSize: {
-			'tremor-label': [
-			  '0.75rem', 
-			  { lineHeight: '1.2rem' } // Base font size with a smaller line height
-			],
-			'tremor-small': [
-			  '0.9375rem', 
-			  { lineHeight: '1.5rem' } // Next size (0.75rem * 1.618)
-			],
-			'tremor-default': [
-			  '1.125rem', 
-			  { lineHeight: '1.75rem' } // Base size * 1.618
-			],
-			'tremor-large': [
-			  '1.375rem', 
-			  { lineHeight: '2.125rem' } // Next size up
-			],
-			'tremor-title': [
-			  '1.6875rem', 
-			  { lineHeight: '2.75rem' } // Golden ratio progression
-			],
-			'tremor-head': [
-			  '2.0625rem', 
-			  { lineHeight: '3.375rem' } 
-			],
-			'tremor-display': [
-			  '2.5rem', 
-			  { lineHeight: '4.0625rem' } 
-			],
-			'tremor-metric': [
-			  '3.125rem', 
-			  { lineHeight: '5rem' } 
-			],
-			'tremor-metric-large': [
-			  '4.0625rem', 
-			  { lineHeight: '6.5rem' } 
-			],
-			'tremor-metric-hero': [
-			  '5.25rem', 
-			  { lineHeight: '8.5rem' } 
-			]
-		  }
-		  
+  			'tremor-label': [
+  				'0.75rem',
+  				{
+  					lineHeight: '1.2rem'
+  				}
+  			],
+  			'tremor-small': [
+  				'0.9375rem',
+  				{
+  					lineHeight: '1.5rem'
+  				}
+  			],
+  			'tremor-default': [
+  				'1.125rem',
+  				{
+  					lineHeight: '1.75rem'
+  				}
+  			],
+  			'tremor-large': [
+  				'1.375rem',
+  				{
+  					lineHeight: '2.125rem'
+  				}
+  			],
+  			'tremor-title': [
+  				'1.6875rem',
+  				{
+  					lineHeight: '2.75rem'
+  				}
+  			],
+  			'tremor-head': [
+  				'2.0625rem',
+  				{
+  					lineHeight: '3.375rem'
+  				}
+  			],
+  			'tremor-display': [
+  				'2.5rem',
+  				{
+  					lineHeight: '4.0625rem'
+  				}
+  			],
+  			'tremor-metric': [
+  				'3.125rem',
+  				{
+  					lineHeight: '5rem'
+  				}
+  			],
+  			'tremor-metric-large': [
+  				'4.0625rem',
+  				{
+  					lineHeight: '6.5rem'
+  				}
+  			],
+  			'tremor-metric-hero': [
+  				'5.25rem',
+  				{
+  					lineHeight: '8.5rem'
+  				}
+  			]
+  		}
   	}
   },
   safelist: [

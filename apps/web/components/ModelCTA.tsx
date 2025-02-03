@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { CompareDrawer } from "@/components/CompareDrawer";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import { MyForm } from "@/components/MyForm";
+import { MeteorDemo } from "@/components/FormLanding";
 
 interface ModelCTAProps {
   model: any; // Replace 'any' with the actual Model type if defined
@@ -47,8 +48,17 @@ export default function ModelCTA({ model }: ModelCTAProps) {
             Use Model
           </Button>
         </DialogTrigger>
-        <DialogContent>
-          <MyForm />
+        <DialogContent className="mx-auto max-h-[100vh] w-full max-w-4xl overflow-auto p-4">
+          <div className="flex w-full flex-col overflow-x-hidden md:flex-row md:gap-4">
+            {/* Reduced width for FormLanding */}
+            <div className="hidden w-full md:block md:w-1/3">
+              <MeteorDemo />
+            </div>
+            {/* MyForm gets preference with 2/3 width */}
+            <div className="w-full md:w-2/3">
+              <MyForm model={model} />
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
 

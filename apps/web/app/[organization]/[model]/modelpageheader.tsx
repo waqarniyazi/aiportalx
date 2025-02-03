@@ -18,7 +18,7 @@ interface ModelPageContentProps {
 
 export default function ModelPageContent({ modelData }: ModelPageContentProps) {
   return (
-    <div className="p-4">
+    <div className="pt-16">
       {/* Breadcrumb with Avatar */}
       <div className="mb-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
