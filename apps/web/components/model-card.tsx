@@ -153,7 +153,7 @@ export default function ModelCards({ filters, sortOption }: ModelCardsProps) {
             {sortedModels.slice(0, visibleModels).map((model, index) => (
               <Card
                 key={index}
-                className="relative flex h-[450px] w-[320px] flex-col justify-between p-3 shadow-lg hover:shadow-md"
+                className="relative flex h-[450px] w-[320px] flex-col justify-between rounded-xl p-3 shadow-md transition-shadow duration-300 hover:shadow-lg"
               >
                 <CardContent>
                   {/* Like Button */}
@@ -181,7 +181,7 @@ export default function ModelCards({ filters, sortOption }: ModelCardsProps) {
 
                   {/* Model Info */}
                   <ModelHover modelData={model}>
-                    <div className="flex items-start space-x-2 hover:cursor-pointer">
+                    <div className="flex items-start space-x-2 hover:cursor-pointer hover:outline-blue-500">
                       <Avatar className="h-12 w-12">
                         <AvatarImage
                           src={`/OrganizationIcons/${model.Organization[0]?.toLowerCase().replace(/\s+/g, "_")}.png`}
@@ -193,7 +193,7 @@ export default function ModelCards({ filters, sortOption }: ModelCardsProps) {
                       </Avatar>
 
                       <div className="flex flex-col">
-                        <span className="cursor-pointer font-mono text-lg font-bold hover:text-blue-500">
+                        <span className="cursor-pointer font-mono text-lg font-bold hover:text-blue-500 hover:underline">
                           <a
                             href={`/${slugify(model.Organization[0])}/${slugify(model.Model)}`}
                           >
@@ -270,10 +270,10 @@ export default function ModelCards({ filters, sortOption }: ModelCardsProps) {
                           <Badge
                             key={sanitizedDomain}
                             variant="outline"
-                            className="cursor-pointer px-2 hover:border-blue-500"
+                            className="relative cursor-pointer overflow-hidden px-2 font-medium before:pointer-events-none before:absolute before:inset-0 before:bg-gradient-to-l before:from-transparent before:to-[#3D61FF] before:opacity-5 hover:border-blue-500 dark:hover:border-blue-400"
                           >
                             <img
-                              src={`/DomainIcons/${sanitizedDomain}.svg`}
+                              src={`/DomainIcons/${sanitizedDomain}.png`}
                               alt={domain.trim()}
                               className="mr-1 h-4 w-4"
                             />
@@ -286,7 +286,7 @@ export default function ModelCards({ filters, sortOption }: ModelCardsProps) {
                       {model.Domain.length > 4 && !expandedDomains[index] && (
                         <Badge
                           variant="secondary"
-                          className="cursor-pointer px-2 hover:border-blue-500 hover:underline"
+                          className="relative cursor-pointer overflow-hidden px-2 font-medium before:pointer-events-none before:absolute before:inset-0 before:bg-gradient-to-l before:from-transparent before:to-[#3D61FF] before:opacity-5 hover:border-blue-500 dark:hover:border-blue-400"
                           onClick={() => toggleExpandDomains(index)}
                         >
                           +{model.Domain.length - 4} more
@@ -312,8 +312,8 @@ export default function ModelCards({ filters, sortOption }: ModelCardsProps) {
                         return (
                           <Badge
                             key={sanitizedTask}
-                            variant="secondary"
-                            className="cursor-pointer px-2 hover:border-blue-500"
+                            variant="outline"
+                            className="relative cursor-pointer overflow-hidden px-2 font-medium before:pointer-events-none before:absolute before:inset-0 before:bg-gradient-to-l before:from-transparent before:to-[#3D61FF] before:opacity-5 hover:border-blue-500 dark:hover:border-blue-400"
                           >
                             <img
                               src={`/TaskIcons/${sanitizedTask}.svg`}
@@ -328,8 +328,8 @@ export default function ModelCards({ filters, sortOption }: ModelCardsProps) {
                       })}
                       {model.Task.length > 4 && !expandedTasks[index] && (
                         <Badge
-                          variant="outline"
-                          className="cursor-pointer px-2 hover:border-blue-500 hover:underline"
+                          variant="secondary"
+                          className="relative cursor-pointer overflow-hidden px-2 font-medium before:pointer-events-none before:absolute before:inset-0 before:bg-gradient-to-l before:from-transparent before:to-[#3D61FF] before:opacity-5 hover:border-blue-500 dark:hover:border-blue-400"
                           onClick={() => toggleExpandTasks(index)}
                         >
                           +{model.Task.length - 4} more
@@ -344,7 +344,7 @@ export default function ModelCards({ filters, sortOption }: ModelCardsProps) {
             ))}
           </div>
           {visibleModels < sortedModels.length && (
-            <Button onClick={loadMoreModels} className="mt-4">
+            <Button onClick={loadMoreModels} className="item-center mt-4">
               Load More
             </Button>
           )}

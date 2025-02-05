@@ -61,7 +61,7 @@ export function BlogCard({ post }: BlogCardProps) {
     };
 
   return (
-    <Card>
+    <Card className="mb-10">
       <CardContent className="p-10">
         <Prose>
           <h1>{post.title}</h1>
@@ -170,12 +170,16 @@ export function BlogCard({ post }: BlogCardProps) {
               }}
             />
             {!expanded && (
-              <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent"></div>
+              <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent dark:from-black"></div>
             )}
           </div>
         </Prose>
         {!expanded && (
-          <Button variant="default" onClick={handleReadMore}>
+          <Button
+            variant="default"
+            onClick={handleReadMore}
+            className="mt-4 rounded-md bg-gradient-to-r from-blue-500 to-blue-700 px-4 py-2 text-white transition-all hover:from-blue-600 hover:to-blue-800"
+          >
             Read More
           </Button>
         )}

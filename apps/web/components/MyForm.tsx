@@ -112,7 +112,7 @@ export function MyForm({ model }: MyFormProps) {
 
   return (
     <Form {...form}>
-      <div className="mx-auto ml-2 w-full p-4 sm:max-w-md lg:max-w-xl">
+      <div className="mx-auto ml-2 w-full p-6 sm:max-w-md lg:max-w-xl">
         {model && (
           <div className="mb-4 flex items-center space-x-2">
             <Avatar className="h-10 w-10">
@@ -147,7 +147,7 @@ export function MyForm({ model }: MyFormProps) {
               control={form.control}
               name="fullName"
               render={({ field }) => (
-                <FormItem className="flex-1">
+                <FormItem className="flex-1 pl-1 pr-1">
                   <FormLabel className="text-sm font-normal">Name</FormLabel>
                   <FormControl>
                     <Input
@@ -164,8 +164,8 @@ export function MyForm({ model }: MyFormProps) {
               control={form.control}
               name="email"
               render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel className="text-sm">Email</FormLabel>
+                <FormItem className="flex-1 pl-1 pr-1">
+                  <FormLabel className="text-sm font-normal">Email</FormLabel>
                   <FormControl>
                     <Input
                       type="email"
@@ -185,7 +185,7 @@ export function MyForm({ model }: MyFormProps) {
               control={form.control}
               name="myNumber"
               render={({ field }) => (
-                <FormItem className="mt-2 flex-1">
+                <FormItem className="mt-2 flex-1 pl-1 pr-1">
                   <FormLabel className="text-sm font-normal">
                     Phone Number
                   </FormLabel>
@@ -215,7 +215,7 @@ export function MyForm({ model }: MyFormProps) {
               control={form.control}
               name="dateOfBirth"
               render={({ field }) => (
-                <FormItem className="mt-2 flex-1">
+                <FormItem className="mt-2 flex-1 pl-1 pr-1">
                   <FormLabel className="mt-2 text-sm font-normal">
                     Date of Birth
                   </FormLabel>
@@ -266,7 +266,7 @@ export function MyForm({ model }: MyFormProps) {
               control={form.control}
               name="company"
               render={({ field }) => (
-                <FormItem className="flex-1">
+                <FormItem className="flex-1 pl-1 pr-1">
                   <FormLabel className="text-sm font-normal">Company</FormLabel>
                   <FormControl>
                     <Input
@@ -284,7 +284,7 @@ export function MyForm({ model }: MyFormProps) {
               control={form.control}
               name="jobRole"
               render={({ field }) => (
-                <FormItem className="flex-1">
+                <FormItem className="flex-1 pl-1 pr-1">
                   <FormLabel className="mt-2 text-sm font-normal">
                     Job Role
                   </FormLabel>
@@ -343,7 +343,7 @@ export function MyForm({ model }: MyFormProps) {
               control={form.control}
               name="industry"
               render={({ field }) => (
-                <FormItem className="flex-1">
+                <FormItem className="flex-1 pl-1 pr-1">
                   <FormLabel className="mt-2 text-sm font-normal">
                     Industry
                   </FormLabel>
@@ -404,7 +404,7 @@ export function MyForm({ model }: MyFormProps) {
             control={form.control}
             name="workEmail"
             render={({ field }) => (
-              <FormItem className="mt-2 flex-1">
+              <FormItem className="mt-2 flex-1 pl-1 pr-1">
                 <FormLabel className="mt-2 text-sm font-normal">
                   Work Email
                 </FormLabel>
@@ -434,7 +434,7 @@ export function MyForm({ model }: MyFormProps) {
                       className="pt-2"
                     />
                   </FormControl>
-                  <FormLabel className="-mt-2 inline-flex p-0 text-xs">
+                  <FormLabel className="-mt-2 inline-flex p-0 text-xs font-normal">
                     Subscribe to newsletter
                   </FormLabel>
                 </FormItem>

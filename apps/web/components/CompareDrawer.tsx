@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import ModelCC from "@/components/ModelCC";
-import { Plus } from "lucide-react";
+import { Plus, Loader2 } from "lucide-react";
 import { useState } from "react";
 import CompareSearch from "@/components/CompareSearch";
 import { useRouter } from "next/navigation";
@@ -27,6 +27,7 @@ export function CompareDrawer({ isOpen, onClose, model }: CompareDrawerProps) {
   const [selectedModels, setSelectedModels] = useState<any[]>([model]);
   const [showSearch, setShowSearch] = useState(false);
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false); // Loading state
 
   const handleAddModel = () => {
     if (selectedModels.length < 3) {
@@ -46,6 +47,8 @@ export function CompareDrawer({ isOpen, onClose, model }: CompareDrawerProps) {
       alert("Select at least 2 models to compare.");
       return;
     }
+
+    setIsLoading(true);
 
     const slugString = selectedModels.map((model) => model.Model).join("-vs-");
     router.push(`/compare/${slugString}`);
@@ -98,9 +101,23 @@ export function CompareDrawer({ isOpen, onClose, model }: CompareDrawerProps) {
           )}
         </div>
         <DrawerFooter className="flex flex-col gap-2">
-          <Button variant="default" onClick={handleCompare}>
+          <Button
+            disabled={isLoading}
+            variant="default"
+            size="sm"
+            onClick={handleCompare}
+          >
+            {isLoading && (
+              <Loader2
+                className="-ms-1 me-2 animate-spin"
+                size={16}
+                strokeWidth={2}
+                aria-hidden="true"
+              />
+            )}
             Compare
           </Button>
+
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
           </DrawerClose>

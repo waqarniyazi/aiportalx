@@ -105,7 +105,7 @@ function ModelCard({
 // The main component that includes both the Meteors and the marquee
 export function MeteorDemo() {
   return (
-    <div className="relative flex w-full flex-col items-center justify-center overflow-hidden rounded-lg border bg-background p-4 md:shadow-xl">
+    <div className="relative flex w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-background p-4 md:shadow-xl">
       {/* The meteor animation area */}
       <div className="relative mb-4 flex h-[300px] w-full flex-col items-center justify-center overflow-hidden rounded-lg">
         <Meteors number={30} />

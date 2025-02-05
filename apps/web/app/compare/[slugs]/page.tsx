@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import axios from "axios";
-import { BasicLayout } from "components/layouts/BasicLayout";
+import { BlogLayout } from "components/layouts/BlogLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -180,9 +180,9 @@ const ComparePage = () => {
   ];
 
   return (
-    <BasicLayout>
+    <BlogLayout>
       <div className="space-y-8 p-4">
-        <h1 className="text-3xl font-bold">Compare AI Models</h1>
+        <h1 className="mt-10 text-3xl font-bold">Compare AI Models</h1>
 
         {/* Comparison Overview Section */}
         <Card>
@@ -200,7 +200,7 @@ const ComparePage = () => {
                   <TableHeader>
                     <TableRow>
                       {/* Freeze the Parameters column */}
-                      <TableHead className="sticky left-0 z-10 bg-white px-4 py-2">
+                      <TableHead className="sticky left-0 z-50 bg-white px-4 py-2 text-slate-900 dark:bg-slate-900 dark:text-slate-50">
                         Parameters
                       </TableHead>
                       <TableHead className="px-4 py-2">
@@ -222,7 +222,7 @@ const ComparePage = () => {
                         isRowVisible(row.field as keyof ModelData) && (
                           <TableRow key={row.field}>
                             {/* Freeze the first cell in each row */}
-                            <TableCell className="sticky left-0 z-10 bg-white px-4 py-2 font-medium">
+                            <TableCell className="sticky left-0 z-50 bg-white px-4 py-2 font-medium text-slate-900 dark:bg-slate-900 dark:text-slate-50">
                               {row.label}
                             </TableCell>
                             <TableCell className="px-4 py-2">
@@ -268,7 +268,7 @@ const ComparePage = () => {
                   <TableHeader>
                     <TableRow>
                       {/* Freeze the Parameters column */}
-                      <TableHead className="sticky left-0 z-10 bg-white px-4 py-2">
+                      <TableHead className="sticky left-0 z-10 bg-white px-4 py-2 text-slate-900 dark:bg-slate-900 dark:text-slate-50">
                         Parameters
                       </TableHead>
                       <TableHead className="px-4 py-2">
@@ -290,7 +290,7 @@ const ComparePage = () => {
                         isRowVisible(row.field as keyof ModelData) && (
                           <TableRow key={row.field}>
                             {/* Freeze the first cell in each row */}
-                            <TableCell className="sticky left-0 z-10 bg-white px-4 py-2 font-medium">
+                            <TableCell className="sticky left-0 z-10 bg-white px-4 py-2 font-medium text-slate-900 dark:bg-slate-900 dark:text-slate-50">
                               {row.label}
                             </TableCell>
                             <TableCell className="px-4 py-2">
@@ -328,7 +328,7 @@ const ComparePage = () => {
                   <TableHeader>
                     <TableRow>
                       {/* Freeze the Parameters column */}
-                      <TableHead className="sticky left-0 z-10 bg-white px-4 py-2">
+                      <TableHead className="sticky left-0 z-10 bg-white px-4 py-2 text-slate-900 dark:bg-slate-900 dark:text-slate-50">
                         Parameters
                       </TableHead>
                       <TableHead className="px-4 py-2">
@@ -350,7 +350,7 @@ const ComparePage = () => {
                         isRowVisible(row.field as keyof ModelData) && (
                           <TableRow key={row.field}>
                             {/* Freeze the first cell in each row */}
-                            <TableCell className="sticky left-0 z-10 bg-white px-4 py-2 font-medium">
+                            <TableCell className="sticky left-0 z-10 bg-white px-4 py-2 font-medium text-slate-900 dark:bg-slate-900 dark:text-slate-50">
                               {row.label}
                             </TableCell>
                             <TableCell className="px-4 py-2">
@@ -445,7 +445,7 @@ const ComparePage = () => {
                           idx === 0 ? (
                             <TableHead
                               key={idx}
-                              className="sticky left-0 z-10 bg-white px-4 py-2"
+                              className="sticky left-0 z-10 bg-white px-4 py-2 text-slate-900 dark:bg-slate-900 dark:text-slate-50"
                             >
                               {model.Model || `Model ${idx + 1}`}
                             </TableHead>
@@ -463,7 +463,7 @@ const ComparePage = () => {
                           idx === 0 ? (
                             <TableCell
                               key={idx}
-                              className="sticky left-0 z-10 bg-white px-4 py-2"
+                              className="sticky left-0 z-10 bg-white px-4 py-2 text-slate-900 dark:bg-slate-900 dark:text-slate-50"
                             >
                               {model.Authors ? model.Authors.join(", ") : "-"}
                             </TableCell>
@@ -558,7 +558,7 @@ const ComparePage = () => {
           </CardContent>
         </Card>
       </div>
-    </BasicLayout>
+    </BlogLayout>
   );
 };
 

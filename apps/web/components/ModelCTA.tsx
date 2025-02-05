@@ -25,7 +25,7 @@ export default function ModelCTA({ model }: ModelCTAProps) {
       <Button
         variant="outline"
         size="sm"
-        className="flex items-center justify-center gap-1 bg-white px-4 py-2"
+        className="flex items-center justify-center gap-1 px-4 py-2"
         onClick={handleCompareClick}
       >
         <img src="/tableicons/compare.svg" alt="compare" className="h-5 w-5" />
@@ -36,14 +36,14 @@ export default function ModelCTA({ model }: ModelCTAProps) {
       <Dialog>
         <DialogTrigger asChild>
           <Button
-            variant="outline"
+            variant="default"
             size="sm"
-            className="flex items-center justify-center gap-1 bg-white px-4 py-2"
+            className="flex items-center justify-center gap-1 rounded-md bg-gradient-to-r from-blue-500 to-blue-700 px-4 py-2 text-white transition-all hover:from-blue-600 hover:to-blue-800"
           >
             <img
               src="/tableicons/monitor.svg"
               alt="use model"
-              className="h-5 w-5"
+              className="no-dark-filter h-5 w-5"
             />
             Use Model
           </Button>

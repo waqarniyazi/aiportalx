@@ -150,7 +150,7 @@ export function AppSidebar({
     return (
       <SidebarGroup key={category}>
         <div
-          className="flex cursor-pointer items-center justify-between p-2 hover:bg-gray-100"
+          className="flex cursor-pointer items-center justify-between p-2"
           onClick={() =>
             setExpandedSections((prev) => ({
               ...prev,
@@ -160,7 +160,9 @@ export function AppSidebar({
         >
           <div className="flex items-center gap-2">
             <Icon className="h-5 w-5" />
-            <SidebarGroupLabel>{label}</SidebarGroupLabel>
+            <SidebarGroupLabel className="text-semiblod text-sm">
+              {label}
+            </SidebarGroupLabel>
           </div>
           {expandedSections[category] ? (
             <ChevronUp className="h-5 w-5" />
@@ -194,7 +196,7 @@ export function AppSidebar({
                 <Badge
                   key={option}
                   variant={isSelected ? "outline" : "outline"}
-                  className={`flex cursor-pointer items-center gap-1 px-3 py-2 ${
+                  className={`relative flex cursor-pointer items-center gap-1 overflow-hidden px-3 py-2 font-medium before:pointer-events-none before:absolute before:inset-0 before:bg-gradient-to-l before:from-transparent before:to-[#3D61FF] before:opacity-5 hover:border-blue-500 dark:hover:border-blue-400 ${
                     isSelected ? "border-blue-500" : ""
                   }`}
                   onClick={() => toggleFilter(category, option)}
