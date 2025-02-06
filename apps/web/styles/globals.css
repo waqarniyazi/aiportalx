@@ -118,3 +118,7 @@
 .dark img.no-dark-filter {
   filter: none !important;
 }
+
+.sidebar-inset-offset {
+  margin-top: var(--sidebar-inset-offset);
+}

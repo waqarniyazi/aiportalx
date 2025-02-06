@@ -233,12 +233,9 @@ export function AppSidebar({
   };
 
   return (
-    <Sidebar>
+    <Sidebar className="top-[--header-height] z-10" variant="inset">
       <SidebarContent>
-        <header className="flex justify-center px-5 py-5">
-          <Image src={logo} alt="AI Portal X Logo" height={20} />
-        </header>
-        <hr className="-m-2 border-gray-200" />
+        <header className="flex justify-center"></header>
         <h3 className="mb-4 ml-2 mt-2 text-lg font-bold">Filters</h3>
         {Object.values(filters).some((selected) => selected.length > 0) && (
           <div className="mb-6">

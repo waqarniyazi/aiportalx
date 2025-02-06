@@ -1,34 +1,32 @@
-"use client";
-
-import React, { useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import logo from "/public/aiportalxlogo.svg";
-import { Separator } from "@/components/ui/separator";
+import { GlobalSearch } from "@/components/GlobalSearch";
+import { ModeToggle } from "@/components/DarkModeToggle";
+import { Button } from "@/components/ui/button";
 
-// Set your header height here (you can adjust it as needed)
-const HEADER_HEIGHT = "64px";
-
-export const HeaderX = () => {
-  // Set a CSS variable on the body for use in other components (e.g. Sidebar offset)
-  useEffect(() => {
-    document.body.style.setProperty("--header-height", HEADER_HEIGHT);
-  }, []);
-
+export function HeaderX() {
   return (
-    <header
-      className="sticky top-0 z-50 flex w-full items-center justify-between bg-background px-4 py-2"
-      style={{ height: HEADER_HEIGHT }}
-    >
-      <div className="flex items-center gap-2">
-        {/* Removed SidebarTrigger from here */}
-        <Separator orientation="vertical" className="mr-2 h-4" />
-        {/* Logo */}
-        <Image src={logo} alt="AI Portal X Logo" height={32} width={32} />
-        <span className="text-lg font-bold">AI Portal X</span>
+    <header className="fixed inset-x-0 z-20 flex h-[--header-height] items-center justify-between bg-background px-4 shadow-md">
+      <div className="flex lg:flex-1">
+        <Link href="/" className="mr-1 p-1.5">
+          <span className="sr-only">AiPortalX</span>
+          <img
+            src="/aiportalxlogo.svg"
+            alt="AIPortalX Logo"
+            className="h-6 w-auto"
+          />
+        </Link>
       </div>
-      {/* You can add additional header content here if needed */}
+      <div className="flex items-center gap-3">
+        <GlobalSearch />
+        <ModeToggle />
+        <Link href="/sign-in">
+          <Button variant="outline" className="h-8 px-4">
+            Log in
+          </Button>
+        </Link>
+      </div>
     </header>
   );
-};
-
-export default HeaderX;
+}

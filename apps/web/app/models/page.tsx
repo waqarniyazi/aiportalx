@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import ModelCard from "@/components/model-card";
 import { AppSidebar } from "@/components/app-sidebar";
 import {
@@ -10,10 +11,8 @@ import {
 } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { usePathname, useRouter } from "next/navigation";
-import { X } from "lucide-react";
+//import SearchBar from "@/components/SearchBar";
 import { BlogCard } from "@/components/BlogCard";
-import { sanityFetch } from "@/sanity/lib/fetch";
 import SortFeature from "@/components/SortFeature";
 import {
   postsQuery,
@@ -22,17 +21,28 @@ import {
   countryPostsQuery,
   organizationPostsQuery,
 } from "../../sanity/lib/queries";
+import { sanityFetch } from "../../sanity/lib/fetch";
+import { HeaderX } from "@/components/headerx";
 
-export default function Page() {
-  const [isLoading, setIsLoading] = useState(true);
+interface BlogPost {
+  _id: string;
+  title: string;
+  description: string;
+  mainImage: any;
+  body: any;
+  authorName: string;
+  authorImage: any;
+  authorTwitter: string;
+  filterValue: string;
+}
+
+export default function ModelsPage() {
   const [models, setModels] = useState([]);
-  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [filters, setFilters] = useState<Record<string, string[]>>({});
-  const [loadedCount, setLoadedCount] = useState(9);
-  const [isMobile, setIsMobile] = useState(false);
-  const [blogPosts, setBlogPosts] = useState([]);
   const pathname = usePathname();
   const router = useRouter();
+  const [blogPosts, setBlogPosts] = useState([]); // For blog posts
   const [sortOption, setSortOption] = useState<{
     field: string;
     order: "asc" | "desc";
@@ -41,54 +51,47 @@ export default function Page() {
     order: "asc",
   });
 
-  // Track window size to determine if mobile view
-  useEffect(() => {
-    const updateMobileView = () => setIsMobile(window.innerWidth <= 768);
-    updateMobileView();
-    window.addEventListener("resize", updateMobileView);
-    return () => window.removeEventListener("resize", updateMobileView);
-  }, []);
-
   useEffect(() => {
     const fetchModels = async () => {
       try {
-        setIsLoading(true);
-        setError(null);
-
-        const url = `http://localhost:5000/api/models`;
-
-        const response = await fetch(url);
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`Failed to fetch models: ${errorText}`);
-        }
-
+        const response = await fetch("http://localhost:5000/api/models", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ filters }),
+        });
         const data = await response.json();
-        if (!Array.isArray(data)) {
-          throw new Error("Invalid API response: Expected an array of models.");
-        }
-
         setModels(data);
-      } catch (err) {
-        setError(`Error fetching models: ${(err as Error).message}`);
-        setModels([]); // Ensure models is always an array
+      } catch (error) {
+        console.error("Error fetching models:", error);
+        setModels([]);
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchModels();
-  }, []);
+  }, [filters]);
 
-  const handleScroll = () => {
-    const scrollPosition =
-      window.innerHeight + document.documentElement.scrollTop;
-    const bottomPosition = document.documentElement.offsetHeight - 100;
+  useEffect(() => {
+    const applyFiltersFromUrl = () => {
+      const pathSegments = pathname.split("/").filter(Boolean);
+      const newFilters: Record<string, string[]> = {};
 
-    if (scrollPosition >= bottomPosition && loadedCount < models.length) {
-      setLoadedCount((prevCount) => prevCount + 9);
-    }
-  };
+      if (pathSegments.length >= 3) {
+        const category = decodeURIComponent(pathSegments[1]);
+        const value = decodeURIComponent(pathSegments[2]).replace(/-/g, " ");
+        newFilters[category.charAt(0).toUpperCase() + category.slice(1)] = [
+          value.charAt(0).toUpperCase() + value.slice(1),
+        ];
+      }
+
+      setFilters(newFilters);
+    };
+
+    applyFiltersFromUrl();
+  }, [pathname]);
 
   useEffect(() => {
     const fetchBlogPosts = async () => {
@@ -131,60 +134,54 @@ export default function Page() {
     fetchBlogPosts();
   }, [pathname]);
 
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [loadedCount, models.length]);
+  const updateFilter = ({ type, value }: { type: string; value: string }) => {
+    const newFilters = { ...filters };
+    if (!newFilters[type]) newFilters[type] = [];
+    if (newFilters[type].includes(value)) {
+      newFilters[type] = newFilters[type].filter((item) => item !== value);
+    } else {
+      newFilters[type].push(value);
+    }
+    setFilters(newFilters);
 
-  const renderSelectedFilters = () => {
-    const selectedFilters = Object.entries(filters).flatMap(
-      ([category, values]) => values.map((value) => `${category}: ${value}`),
-    );
+    const queryString = Object.entries(newFilters)
+      .map(([key, values]) =>
+        values
+          .map((val) => `${encodeURIComponent(key)}=${encodeURIComponent(val)}`)
+          .join("&"),
+      )
+      .join("&");
 
-    return selectedFilters.length > 0 ? (
-      <div className="flex flex-wrap gap-2">
-        {selectedFilters.map((filter, index) => (
-          <span
-            key={index}
-            className="rounded-md bg-blue-100 px-3 py-1 text-xs text-blue-600"
-          >
-            {filter}
-          </span>
-        ))}
-      </div>
-    ) : (
-      <span>No filters selected</span>
+    router.push(
+      `/models/${encodeURIComponent(type)}/${encodeURIComponent(value)}${queryString ? `?${queryString}` : ""}`,
     );
   };
 
   return (
     <SidebarProvider>
-      {/* AppSidebar with collapsible functionality */}
-      <AppSidebar filters={filters} setFilters={setFilters} />
+      <HeaderX />
+      <div className="pt-[var(--header-height)]"></div>
+      <AppSidebar
+        filters={filters}
+        setFilters={setFilters}
+        onFilterChange={updateFilter}
+      />
       <SidebarInset>
-        <header className="sticky top-0 z-10 flex h-16 items-center justify-between bg-background px-4 group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+        <header className="sticky top-[var(--header-height)] z-50 mb-[25px] flex w-full items-center justify-between bg-background px-4 py-2">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />
-            {/* Breadcrumb or Selected Filters */}
             <nav aria-label="breadcrumb">
               <ol className="flex text-sm text-muted-foreground">
-                {isMobile &&
-                Object.values(filters).some((f) => f.length > 0) ? (
-                  renderSelectedFilters()
-                ) : (
-                  <>
-                    <li className="flex items-center">
-                      <a href="/" className="hover:underline">
-                        Home
-                      </a>
-                      <span className="mx-2">{"/"}</span>
-                    </li>
-                    <li className="flex items-center">
-                      <span>AI Models</span>
-                    </li>
-                  </>
-                )}
+                <li className="flex items-center">
+                  <a href="/" className="hover:underline">
+                    Home
+                  </a>
+                  <span className="mx-2">{"/"}</span>
+                </li>
+                <li className="flex items-center">
+                  <span>AI Models</span>
+                </li>
               </ol>
             </nav>
           </div>
@@ -206,11 +203,9 @@ export default function Page() {
                 />
               ))}
             </div>
-          ) : error ? (
-            <p className="text-red-500">{error}</p>
           ) : (
             <ModelCard
-              models={models.slice(0, loadedCount)}
+              models={models}
               filters={filters}
               sortOption={sortOption}
             />

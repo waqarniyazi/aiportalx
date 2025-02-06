@@ -55,14 +55,14 @@ export default function SortFeature({
   const buttonLabel = isDefault ? "Sort" : getLabel(sortOption.field);
 
   // Only show blue if user has picked something other than default
-  const buttonClass = `flex items-center ${
+  const buttonClass = `flex items-center h-8 px-2 ${
     !isDefault ? "border-blue-500 text-blue-600" : ""
   }`;
 
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" className={buttonClass}>
+        <Button variant="ghost" className={buttonClass}>
           {buttonLabel}
           <ChevronsUpDown className="ml-2 h-4 w-4" />
         </Button>

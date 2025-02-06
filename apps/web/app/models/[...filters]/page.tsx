@@ -22,6 +22,7 @@ import {
   organizationPostsQuery,
 } from "../../../sanity/lib/queries";
 import { sanityFetch } from "../../../sanity/lib/fetch";
+import { HeaderX } from "@/components/headerx";
 
 interface BlogPost {
   _id: string;
@@ -158,13 +159,15 @@ export default function ModelsPage() {
 
   return (
     <SidebarProvider>
+      <HeaderX />
+      <div className="pt-[var(--header-height)]"></div>
       <AppSidebar
         filters={filters}
         setFilters={setFilters}
         onFilterChange={updateFilter}
       />
       <SidebarInset>
-        <header className="sticky top-0 z-50 flex w-full items-center justify-between bg-background px-4 py-2">
+        <header className="sticky top-[var(--header-height)] z-50 mb-[30px] flex w-full items-center justify-between bg-background px-4 py-[1px] pt-[1px] shadow-sm">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />
@@ -187,7 +190,7 @@ export default function ModelsPage() {
           </div>
         </header>
 
-        <div className="p-4">
+        <div className="mt-40 p-4">
           {blogPosts.map((post) => (
             <BlogCard key={post._id} post={post} />
           ))}

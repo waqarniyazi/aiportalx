@@ -84,6 +84,12 @@ export default async function RootLayout({
       <html lang="en" className="h-full">
         <body
           className={`h-full ${inter.variable} ${calFont.variable} font-sans antialiased`}
+          style={
+            {
+              "--header-height": "3rem",
+              "--sidebar-inset-offset": "calc(var(--header-height) * -1)",
+            } as React.CSSProperties
+          }
         >
           <ThemeProvider
             attribute="class"

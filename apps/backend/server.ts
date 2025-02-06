@@ -185,6 +185,43 @@ app.get("/api/search", async (req: Request, res: Response) => {
   }
 });
 
+app.get("/api/globalsearch", async (req: Request, res: Response) => {
+  try {
+    const query = req.query.query as string;
+    if (!query) {
+      return res.status(400).json({ error: "Query is required" });
+    }
+
+    // Example: find partial matches for each category
+    const models = await Model.find({
+      Model: { $regex: new RegExp(query, "i") },
+    });
+    const tasks = await Model.find({
+      Task: { $regex: new RegExp(query, "i") },
+    });
+    const organizations = await Model.find({
+      Organization: { $regex: new RegExp(query, "i") },
+    });
+    const domains = await Model.find({
+      Domain: { $regex: new RegExp(query, "i") },
+    });
+    const countries = await Model.find({
+      "Country (from Organization)": { $regex: new RegExp(query, "i") },
+    });
+
+    res.status(200).json({
+      models,
+      tasks,
+      organizations,
+      domains,
+      countries,
+    });
+  } catch (error) {
+    console.error("❌ Error in search:", error);
+    res.status(500).json({ error: "Server Error" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`✅ Server running on http://localhost:${PORT}`);
 });

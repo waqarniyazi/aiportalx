@@ -108,7 +108,7 @@ export function BlogCard({ post }: BlogCardProps) {
           ) : null}
           <div
             className={
-              !expanded ? "relative max-h-[300px] overflow-hidden" : ""
+              !expanded ? "relative max-h-[100px] overflow-hidden" : ""
             }
           >
             <PortableText
