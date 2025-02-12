@@ -74,6 +74,14 @@ module.exports = {
   				'100%': {
   					'background-position': '200%'
   				}
+  			},
+  			'typing-dot-bounce': {
+  				'0%,40%': {
+  					transform: 'translateY(0)'
+  				},
+  				'20%': {
+  					transform: 'translateY(-0.25rem)'
+  				}
   			}
   		},
   		animation: {
@@ -82,7 +90,8 @@ module.exports = {
   			marquee: 'marquee var(--duration) infinite linear',
   			'marquee-vertical': 'marquee-vertical var(--duration) linear infinite',
   			meteor: 'meteor 5s linear infinite',
-  			rainbow: 'rainbow var(--speed, 2s) infinite linear'
+  			rainbow: 'rainbow var(--speed, 2s) infinite linear',
+  			'typing-dot-bounce': 'typing-dot-bounce 1.25s ease-out infinite'
   		},
   		fontFamily: {
   			cal: [
@@ -200,7 +209,13 @@ module.exports = {
   			'color-2': 'hsl(var(--color-2))',
   			'color-3': 'hsl(var(--color-3))',
   			'color-4': 'hsl(var(--color-4))',
-  			'color-5': 'hsl(var(--color-5))'
+  			'color-5': 'hsl(var(--color-5))',
+  			shiki: {
+  				light: 'var(--shiki-light)',
+  				'light-bg': 'var(--shiki-light-bg)',
+  				dark: 'var(--shiki-dark)',
+  				'dark-bg': 'var(--shiki-dark-bg)'
+  			}
   		},
   		boxShadow: {
   			'tremor-input': '0 1px 2px 0 rgb(0 0 0 / 0.05)',

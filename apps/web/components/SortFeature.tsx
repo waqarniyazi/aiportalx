@@ -62,7 +62,7 @@ export default function SortFeature({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="ghost" className={buttonClass}>
+        <Button variant="outline" className={buttonClass}>
           {buttonLabel}
           <ChevronsUpDown className="ml-2 h-4 w-4" />
         </Button>

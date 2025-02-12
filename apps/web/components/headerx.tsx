@@ -7,14 +7,14 @@ import { Button } from "@/components/ui/button";
 
 export function HeaderX() {
   return (
-    <header className="fixed inset-x-0 z-20 flex h-[--header-height] items-center justify-between bg-background px-4 shadow-md">
+    <header className="fixed inset-x-0 z-20 flex h-[--header-height] items-center justify-between border-b bg-background px-4 shadow-md dark:border-gray-700">
       <div className="flex lg:flex-1">
         <Link href="/" className="mr-1 p-1.5">
           <span className="sr-only">AiPortalX</span>
           <img
             src="/aiportalxlogo.svg"
             alt="AIPortalX Logo"
-            className="h-6 w-auto"
+            className="h-6 w-auto pl-9"
           />
         </Link>
       </div>

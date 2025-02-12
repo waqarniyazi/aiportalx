@@ -155,7 +155,7 @@ export function GlobalSearch() {
           value={searchQuery}
           onValueChange={setSearchQuery}
           onKeyDown={handleKeyDown}
-          className="ring-0 focus:outline-none focus:ring-0"
+          className="custom-command-input focus:shadow-none focus:outline-none focus-visible:ring-0 focus-visible:ring-transparent"
         />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>

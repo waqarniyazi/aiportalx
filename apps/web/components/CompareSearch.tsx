@@ -69,13 +69,13 @@ export default function CompareSearch({ onSelectModel }: CompareSearchProps) {
       </div>
 
       {showDropdown && (
-        <div className="absolute z-10 mt-1 max-h-60 w-full overflow-y-auto rounded-md border bg-white shadow-lg">
+        <div className="absolute z-10 mt-1 max-h-60 w-full overflow-y-auto rounded-md border bg-background shadow-lg">
           {results.length > 0 ? (
             results.map((result, index) => (
               <div
                 key={index}
                 onMouseDown={() => onSelectModel(result)}
-                className="flex cursor-pointer items-center p-2 hover:bg-gray-100"
+                className="flex cursor-pointer items-center p-2 hover:bg-opacity-80 dark:hover:bg-opacity-60"
               >
                 <Avatar className="h-10 w-10">
                   <AvatarImage

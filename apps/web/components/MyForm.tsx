@@ -101,7 +101,7 @@ export function MyForm({ model }: MyFormProps) {
       });
 
       if (response.ok) {
-        window.location.href = "/refining";
+        window.location.href = "/deployment";
       } else {
         alert("Failed to submit data!");
       }

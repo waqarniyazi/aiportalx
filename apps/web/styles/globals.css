@@ -122,3 +122,12 @@
 .sidebar-inset-offset {
   margin-top: var(--sidebar-inset-offset);
 }
+
+/* Remove focus ring only for CommandInput */
+.custom-command-input:focus-visible,
+.custom-command-input:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+  ring: 0 !important;
+}

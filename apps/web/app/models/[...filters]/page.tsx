@@ -190,7 +190,7 @@ export default function ModelsPage() {
           </div>
         </header>
 
-        <div className="mt-40 p-4">
+        <div className="p-4">
           {blogPosts.map((post) => (
             <BlogCard key={post._id} post={post} />
           ))}
