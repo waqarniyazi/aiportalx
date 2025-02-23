@@ -16,15 +16,14 @@ export function CTA() {
         />
       </div> */}
       <div className="mx-auto max-w-2xl text-center">
-        <h2 className="font-cal text-3xl text-gray-900 sm:text-4xl">
+        <h2 className="font-cal text-3xl sm:text-4xl">
           AI Made Easy for Everyone.
           <br />
           Discover, Compare, and Leverage AI Models Effortlessly
         </h2>
-        <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-600">
-          Inbox Zero uses AI to help you empty your inbox daily. What previously
-          took hours, now takes minutes. Inbox Zero is your virtual assistant
-          for emails.
+        <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-600 dark:text-gray-400">
+          Your ultimate platform to explore AI models by task, domain, company,
+          and country. Dive deeper with insightful blogs and expert reviews.
         </p>
         <CTAButtons />
       </div>

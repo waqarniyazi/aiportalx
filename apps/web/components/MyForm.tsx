@@ -30,8 +30,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import PhoneInput from "react-phone-input-2";
-import "react-phone-input-2/lib/style.css";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { cn } from "@/lib/utils";
 import { LoaderCircle } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -48,7 +47,7 @@ interface MyFormProps {
 const formSchema = z.object({
   fullName: z.string().min(1).max(255),
   email: z.string().email().min(1).max(255),
-  myNumber: z.string().regex(/^\d{10,15}$/, "Invalid phone number"),
+  myNumber: z.string().regex(/^\+?\d{10,15}$/, "Invalid phone number"),
   dateOfBirth: z.date(),
   company: z.string().min(1).max(255),
   industry: z.string(),
@@ -83,7 +82,7 @@ export function MyForm({ model }: MyFormProps) {
       fullName: "",
       email: "",
       myNumber: "",
-      dateOfBirth: "",
+      dateOfBirth: new Date(),
       company: "",
       industry: "",
       jobRole: "",
@@ -189,21 +188,14 @@ export function MyForm({ model }: MyFormProps) {
                   <FormLabel className="text-sm font-normal">
                     Phone Number
                   </FormLabel>
-                  <FormControl>
+                  <FormControl className="w-full">
                     <PhoneInput
-                      country={"in"}
-                      value={field.value ? String(field.value) : ""}
-                      onChange={(phone) => field.onChange(phone)}
-                      inputProps={{
-                        name: "phone",
-                        required: true,
-                        autoComplete: "off",
-                      }}
-                      inputStyle={{
-                        width: "100%",
-                        height: "2rem", // Reduced height
-                        fontSize: "0.75rem", // Smaller text
-                      }}
+                      placeholder="Phone number"
+                      {...field}
+                      defaultCountry="IN"
+                      international
+                      className="w-full" // Affects the outer container
+                      inputClassName="h-3 text-xs"
                     />
                   </FormControl>
                   <FormMessage />
@@ -283,120 +275,132 @@ export function MyForm({ model }: MyFormProps) {
             <FormField
               control={form.control}
               name="jobRole"
-              render={({ field }) => (
-                <FormItem className="flex-1 pl-1 pr-1">
-                  <FormLabel className="mt-2 text-sm font-normal">
-                    Job Role
-                  </FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className="h-8 w-full justify-between text-sm font-normal text-gray-500 placeholder:text-xs"
-                        >
-                          {field.value
-                            ? job.find((item) => item.value === field.value)
-                                ?.label
-                            : "Select job role"}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[200px] p-0">
-                      <Command>
-                        <CommandInput
-                          placeholder="Search job role..."
-                          className="h-8 text-sm placeholder:text-xs"
-                        />
-                        <CommandEmpty>No roles found.</CommandEmpty>
-                        <CommandGroup>
-                          {job.map((item) => (
-                            <CommandItem
-                              key={item.value}
-                              value={item.label}
-                              onSelect={() =>
-                                form.setValue("jobRole", item.value)
-                              }
-                            >
-                              <Check
-                                className={`mr-2 h-4 w-4 ${
-                                  item.value === field.value
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                }`}
-                              />
-                              {item.label}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
+              render={({ field }) => {
+                const jobOptions = Array.isArray(job) ? job : [];
+                console.log("jobOptions:", jobOptions);
+                return (
+                  <FormItem className="flex-1 pl-1 pr-1">
+                    <FormLabel className="mt-2 text-sm font-normal">
+                      Job Role
+                    </FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className="h-8 w-full justify-between text-sm font-normal text-gray-500 placeholder:text-xs"
+                          >
+                            {field.value
+                              ? jobOptions.find(
+                                  (item) => item.value === field.value,
+                                )?.label
+                              : "Select job role"}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[200px] p-0">
+                        <Command>
+                          <CommandInput
+                            placeholder="Search job role..."
+                            className="h-8 text-sm placeholder:text-xs"
+                          />
+                          <CommandEmpty>No roles found.</CommandEmpty>
+                          <CommandGroup>
+                            {jobOptions.map((item) => (
+                              <CommandItem
+                                key={item.value}
+                                value={item.label}
+                                onSelect={() =>
+                                  form.setValue("jobRole", item.value)
+                                }
+                              >
+                                <Check
+                                  className={`mr-2 h-4 w-4 ${
+                                    item.value === field.value
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                                  }`}
+                                />
+                                {item.label}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
             />
 
+            {/* Industry Field */}
             <FormField
               control={form.control}
               name="industry"
-              render={({ field }) => (
-                <FormItem className="flex-1 pl-1 pr-1">
-                  <FormLabel className="mt-2 text-sm font-normal">
-                    Industry
-                  </FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className="h-8 w-full justify-between text-sm font-normal text-gray-500 placeholder:text-xs"
-                        >
-                          {field.value
-                            ? languagee.find(
-                                (item) => item.value === field.value,
-                              )?.label
-                            : "Select industry"}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[200px] p-0">
-                      <Command>
-                        <CommandInput
-                          placeholder="Search industry..."
-                          className="h-8 text-sm placeholder:text-xs"
-                        />
-                        <CommandEmpty>No industry found.</CommandEmpty>
-                        <CommandGroup>
-                          {languagee.map((item) => (
-                            <CommandItem
-                              value={item.label}
-                              key={item.value}
-                              onSelect={() =>
-                                form.setValue("industry", item.value)
-                              }
-                            >
-                              <Check
-                                className={`mr-2 h-4 w-4 ${
-                                  item.value === field.value
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                }`}
-                              />
-                              {item.label}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
+              render={({ field }) => {
+                const industryOptions = Array.isArray(languagee)
+                  ? languagee
+                  : [];
+                console.log("industryOptions:", industryOptions);
+                return (
+                  <FormItem className="flex-1 pl-1 pr-1">
+                    <FormLabel className="mt-2 text-sm font-normal">
+                      Industry
+                    </FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className="h-8 w-full justify-between text-sm font-normal text-gray-500 placeholder:text-xs"
+                          >
+                            {field.value
+                              ? industryOptions.find(
+                                  (item) => item.value === field.value,
+                                )?.label
+                              : "Select industry"}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[200px] p-0">
+                        <Command>
+                          <CommandInput
+                            placeholder="Search industry..."
+                            className="h-8 text-sm placeholder:text-xs"
+                          />
+                          <CommandEmpty>No industry found.</CommandEmpty>
+                          <CommandGroup>
+                            {industryOptions.map((item) => (
+                              <CommandItem
+                                key={item.value}
+                                value={item.label}
+                                onSelect={() =>
+                                  form.setValue("industry", item.value)
+                                }
+                              >
+                                <Check
+                                  className={`mr-2 h-4 w-4 ${
+                                    item.value === field.value
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                                  }`}
+                                />
+                                {item.label}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
             />
           </div>
 

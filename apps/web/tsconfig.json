@@ -27,7 +27,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "./env.ts"
-, "utils/mongodb/mongodb.ts"  ],
+, "utils/mongodb/mongodb.ts", "slugify.js"  ],
   "exclude": [
     "node_modules",
     "public/sw.js"

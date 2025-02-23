@@ -127,9 +127,7 @@ function FooterList(props: {
 }) {
   return (
     <>
-      <h3 className="text-sm font-semibold leading-6 text-gray-900">
-        {props.title}
-      </h3>
+      <h3 className="text-sm font-semibold leading-6">{props.title}</h3>
       <ul className="mt-6 space-y-4">
         {props.items.map((item) => (
           <li key={item.name}>
@@ -137,7 +135,7 @@ function FooterList(props: {
               href={item.href}
               target={item.target}
               prefetch={item.target !== "_blank"}
-              className="text-sm leading-6 text-gray-600 hover:text-gray-900"
+              className="text-sm leading-6 text-gray-600 hover:underline"
             >
               {item.name}
             </Link>

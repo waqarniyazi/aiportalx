@@ -7,7 +7,7 @@ import {
   SidebarGroupLabel,
 } from "@/components/ui/sidebar";
 import { Badge } from "@/components/ui/badge"; // Shadcn Badge component
-import { Input } from "@/components/ui/input"; // Shadcn Input component for search
+import { Autocomplete, Option } from "@/components/ui/autocomplete"; // Autocomplete
 import {
   Grid2x2Check,
   Building2,
@@ -17,8 +17,6 @@ import {
   ChevronUp,
   X,
 } from "lucide-react";
-import Image from "next/image";
-import logo from "/public/aiportalxlogo.svg";
 
 export function AppSidebar({
   filters,
@@ -29,6 +27,7 @@ export function AppSidebar({
   setFilters: (newFilters: Record<string, string[]>) => void;
   onFilterChange: ({ type, value }: { type: string; value: string }) => void;
 }) {
+  // Local state to hold combined filter data (fetched + predefined)
   const [filterData, setFilterData] = useState<Record<string, string[]>>({
     Task: [],
     Domain: [],
@@ -88,7 +87,7 @@ export function AppSidebar({
                   [filterKey.toLowerCase()]: filterValues
                     .map((v) => v.replace(/\s+/g, "-").replace(/\//g, "-"))
                     .join(","),
-                } // Encode query params
+                }
               : acc,
           {},
         ),
@@ -106,7 +105,7 @@ export function AppSidebar({
     onFilterChange({ type: key, value });
   };
 
-  // Update search terms
+  // Update search terms in local state
   const handleSearchChange = (key: string, value: string) => {
     setSearchTerms((prev) => ({ ...prev, [key]: value }));
   };
@@ -116,6 +115,7 @@ export function AppSidebar({
     setExpandedSections((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
+  // Predefined local filters
   const predefinedFilters = {
     Task: [
       "Language modelling/generation",
@@ -128,8 +128,39 @@ export function AppSidebar({
     Country: ["Multinational", "USA", "China", "France"],
   };
 
+  // Fetch distinct filter options from /api/filters and merge them with predefined
   useEffect(() => {
-    setFilterData(predefinedFilters);
+    async function fetchFilters() {
+      try {
+        // Use the full URL
+        const response = await fetch("http://localhost:5000/api/filters");
+        const data = await response.json();
+
+        const mergedTask = Array.from(
+          new Set([...predefinedFilters.Task, ...data.tasks]),
+        );
+        const mergedDomain = Array.from(
+          new Set([...predefinedFilters.Domain, ...data.domains]),
+        );
+        const mergedOrg = Array.from(
+          new Set([...predefinedFilters.Organization, ...data.organizations]),
+        );
+        const mergedCountry = Array.from(
+          new Set([...predefinedFilters.Country, ...data.countries]),
+        );
+
+        setFilterData({
+          Task: mergedTask,
+          Domain: mergedDomain,
+          Organization: mergedOrg,
+          Country: mergedCountry,
+        });
+      } catch (error) {
+        console.error("Error fetching filters:", error);
+        setFilterData(predefinedFilters);
+      }
+    }
+    fetchFilters();
   }, []);
 
   const toggleFilter = (category: string, value: string) => {
@@ -142,21 +173,20 @@ export function AppSidebar({
     options: string[],
     Icon: any,
   ) => {
-    const predefinedOptions = predefinedFilters[category] || [];
-    const filteredOptions = options.filter((option) =>
-      option.toLowerCase().includes(searchTerms[category]?.toLowerCase() || ""),
+    // Get the current search term for the category
+    const searchTerm = searchTerms[category] || "";
+    // Filter options by search term and remove any empty strings
+    const filteredOptions = options.filter(
+      (option) =>
+        option.trim() !== "" &&
+        option.toLowerCase().includes(searchTerm.toLowerCase()),
     );
 
     return (
       <SidebarGroup key={category}>
         <div
           className="flex cursor-pointer items-center justify-between p-2"
-          onClick={() =>
-            setExpandedSections((prev) => ({
-              ...prev,
-              [category]: !prev[category],
-            }))
-          }
+          onClick={() => toggleSection(category)}
         >
           <div className="flex items-center gap-2">
             <Icon className="h-5 w-5" />
@@ -177,25 +207,27 @@ export function AppSidebar({
               : "max-h-0 animate-accordion-up overflow-hidden opacity-0"
           }`}
         >
-          <Input
-            type="text"
-            placeholder={`Search ${label.toLowerCase()}...`}
-            value={searchTerms[category]}
-            onChange={(e) =>
-              setSearchTerms((prev) => ({
-                ...prev,
-                [category]: e.target.value,
-              }))
-            }
+          <Autocomplete
+            label={`Search ${label.toLowerCase()}`}
+            value={searchTerm}
+            onInputChange={(e) => handleSearchChange(category, e.target.value)}
+            options={filteredOptions.map((opt) => ({ label: opt, value: opt }))}
+            onOptionSelect={(selectedVal: string, selectedOpt: Option) => {
+              toggleFilter(category, selectedOpt.value);
+              // Clear the search term so the input resets
+              handleSearchChange(category, "");
+            }}
             className="mb-3"
           />
+
+          {/* Predefined filter badges */}
           <div className="mt-2 flex flex-wrap gap-2">
-            {predefinedOptions.map((option) => {
+            {predefinedFilters[category]?.map((option) => {
               const isSelected = filters[category]?.includes(option);
               return (
                 <Badge
                   key={option}
-                  variant={isSelected ? "outline" : "outline"}
+                  variant="outline"
                   className={`relative flex cursor-pointer items-center gap-1 overflow-hidden px-3 py-2 font-medium before:pointer-events-none before:absolute before:inset-0 before:bg-gradient-to-l before:from-transparent before:to-[#3D61FF] before:opacity-5 hover:border-blue-500 dark:hover:border-blue-400 ${
                     isSelected ? "border-blue-500" : ""
                   }`}
@@ -206,27 +238,6 @@ export function AppSidebar({
               );
             })}
           </div>
-          {searchTerms[category] && (
-            <div className="mt-4 flex flex-wrap gap-2">
-              {filteredOptions.map((option) => {
-                if (predefinedOptions.includes(option)) return null;
-
-                const isSelected = filters[category]?.includes(option);
-                return (
-                  <Badge
-                    key={option}
-                    variant={isSelected ? "outline" : "outline"}
-                    className={`flex cursor-pointer items-center gap-1 px-3 py-2 ${
-                      isSelected ? "border-blue-500" : ""
-                    }`}
-                    onClick={() => toggleFilter(category, option)}
-                  >
-                    {option}
-                  </Badge>
-                );
-              })}
-            </div>
-          )}
         </SidebarGroupContent>
       </SidebarGroup>
     );
@@ -237,6 +248,8 @@ export function AppSidebar({
       <SidebarContent>
         <header className="flex justify-center"></header>
         <h3 className="mb-4 ml-2 mt-2 text-lg font-bold">Filters</h3>
+
+        {/* Display selected filters as badges */}
         {Object.values(filters).some((selected) => selected.length > 0) && (
           <div className="mb-6">
             <h4 className="mb-2 ml-2 text-xs font-medium">Selected Filters</h4>
@@ -255,6 +268,7 @@ export function AppSidebar({
             </div>
           </div>
         )}
+
         {renderFilterSection("Task", "Task", filterData.Task, Grid2x2Check)}
         {renderFilterSection("Domain", "Domain", filterData.Domain, Boxes)}
         {renderFilterSection(

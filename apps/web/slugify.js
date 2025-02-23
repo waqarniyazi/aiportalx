@@ -1,4 +1,4 @@
-export function slugify(text: unknown): string {
+export function slugify(text) {
   if (Array.isArray(text)) {
     text = text[0];
   }
@@ -14,7 +14,7 @@ export function slugify(text: unknown): string {
     .replace(/^-+|-+$/g, ""); // Strip leading/trailing hyphens
 }
 
-export function deslugify(text: unknown): string {
+export function deslugify(text) {
   // We will no longer use deslugify to “rebuild” the original string.
   // (Its naive replacement of hyphen with space breaks names like “BIG-G 137B”.)
   if (typeof text !== "string") return "";

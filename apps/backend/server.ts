@@ -128,14 +128,36 @@ app.get(
   "/api/models/:organization/:model",
   async (req: Request, res: Response) => {
     try {
-      // Decode URL components to preserve spaces and valid hyphens in names
-      const organization = decodeURIComponent(req.params.organization);
-      const model = decodeURIComponent(req.params.model);
+      // Decode the URL components (they’re still in slug form)
+      const orgSlug = decodeURIComponent(req.params.organization);
+      const modelSlug = decodeURIComponent(req.params.model);
 
-      // Fetch the model data from MongoDB using a case-insensitive regex match
+      // Helper to escape regex special characters
+      function escapeRegex(str: string): string {
+        return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      }
+
+      // Create a flexible regex: hyphens in the slug will match either a hyphen or a space
+      function createFlexibleRegex(slug: string): RegExp {
+        return new RegExp(
+          "^" +
+            slug
+              .split("-")
+              .map((part) => escapeRegex(part.trim()))
+              .filter(Boolean)
+              .join("[- ]") +
+            "$",
+          "i",
+        );
+      }
+
+      const orgRegex = createFlexibleRegex(orgSlug);
+      const modelRegex = createFlexibleRegex(modelSlug);
+
+      // Use the flexible regex for a case-insensitive lookup
       const modelData = await Model.findOne({
-        Organization: { $regex: new RegExp(`^${organization}$`, "i") },
-        Model: { $regex: new RegExp(`^${model}$`, "i") },
+        Organization: { $regex: orgRegex },
+        Model: { $regex: modelRegex },
       });
 
       if (!modelData) {

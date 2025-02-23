@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { HeroHome } from "@/app/(landing)/home/Hero";
+import Hero from "@/app/(landing)/home/Hero";
 import { FeaturesHome } from "@/app/(landing)/home/Features";
 import { Testimonials } from "@/app/(landing)/home/Testimonials";
 import { FAQs } from "@/app/(landing)/home/FAQs";
@@ -14,11 +14,10 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <BasicLayout>
-      <HeroHome />
-      <Testimonials />
+      <Hero />
       <FeaturesHome />
-      <Suspense>
-      </Suspense>
+      <Testimonials />
+      <Suspense></Suspense>
       <FAQs />
       <CTA />
     </BasicLayout>

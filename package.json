@@ -11,7 +11,8 @@
     "prepare": "husky install",
     "ncu": "ncu -u -ws",
     "format-and-lint": "biome check .",
-    "format-and-lint:fix": "biome check . --write"
+    "format-and-lint:fix": "biome check . --write",
+    "analyze": "cross-env ANALYZE=true next build"
   },
   "devDependencies": {
     "@inboxzero/eslint-config": "workspace:*",

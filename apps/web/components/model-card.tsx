@@ -15,6 +15,7 @@ import {
 import ModelCTA from "@/components/ModelCTA";
 import { ModelHover } from "@/components/ModelHover";
 import { slugify } from "utils/slugify";
+import { ChevronDown } from "lucide-react";
 
 interface Model {
   Model: string;
@@ -344,7 +345,12 @@ export default function ModelCards({ filters, sortOption }: ModelCardsProps) {
             ))}
           </div>
           {visibleModels < sortedModels.length && (
-            <Button onClick={loadMoreModels} className="item-center mt-4">
+            <Button
+              onClick={loadMoreModels}
+              variant="secondary"
+              className="mx-auto mt-7 flex items-center gap-2"
+            >
+              <ChevronDown className="h-5 w-5" />
               Load More
             </Button>
           )}

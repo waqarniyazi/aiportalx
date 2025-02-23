@@ -82,6 +82,26 @@ module.exports = {
   				'20%': {
   					transform: 'translateY(-0.25rem)'
   				}
+  			},
+  			appear: {
+  				'0%': {
+  					opacity: '0',
+  					transform: 'translateY(10px)'
+  				},
+  				'100%': {
+  					opacity: '1',
+  					transform: 'translateY(0)'
+  				}
+  			},
+  			'appear-zoom': {
+  				'0%': {
+  					opacity: '0',
+  					transform: 'scale(0.95)'
+  				},
+  				'100%': {
+  					opacity: '1',
+  					transform: 'scale(1)'
+  				}
   			}
   		},
   		animation: {
@@ -91,7 +111,9 @@ module.exports = {
   			'marquee-vertical': 'marquee-vertical var(--duration) linear infinite',
   			meteor: 'meteor 5s linear infinite',
   			rainbow: 'rainbow var(--speed, 2s) infinite linear',
-  			'typing-dot-bounce': 'typing-dot-bounce 1.25s ease-out infinite'
+  			'typing-dot-bounce': 'typing-dot-bounce 1.25s ease-out infinite',
+  			appear: 'appear 0.5s ease-out forwards',
+  			'appear-zoom': 'appear-zoom 0.5s ease-out forwards'
   		},
   		fontFamily: {
   			cal: [
@@ -118,8 +140,8 @@ module.exports = {
   				foreground: 'hsl(var(--secondary-foreground))'
   			},
   			destructive: {
-  				DEFAULT: 'hsl(var(--destructive) / <alpha-value>)',
-  				foreground: 'hsl(var(--destructive-foreground) / <alpha-value>)'
+  				DEFAULT: 'hsl(var(--destructive))',
+  				foreground: 'hsl(var(--destructive-foreground))'
   			},
   			muted: {
   				DEFAULT: 'hsl(var(--muted))',
@@ -167,14 +189,7 @@ module.exports = {
   				}
   			},
   			'dark-tremor': {
-  				brand: {
-  					faint: '#0B1229',
-  					muted: '#172554',
-  					subtle: '#1e40af',
-  					DEFAULT: '#3b82f6',
-  					emphasis: '#60a5fa',
-  					inverted: '#030712'
-  				},
+  				brand: 'hsl(var(--brand))',
   				background: {
   					muted: '#131A2B',
   					subtle: '#1f2937',
@@ -193,7 +208,8 @@ module.exports = {
   					emphasis: '#e5e7eb',
   					strong: '#f9fafb',
   					inverted: '#000000'
-  				}
+  				},
+  				'brand-foreground': 'hsl(var(--brand-foreground))'
   			},
   			sidebar: {
   				DEFAULT: 'hsl(var(--sidebar-background))',
@@ -215,6 +231,13 @@ module.exports = {
   				'light-bg': 'var(--shiki-light-bg)',
   				dark: 'var(--shiki-dark)',
   				'dark-bg': 'var(--shiki-dark-bg)'
+  			},
+  			chart: {
+  				'1': 'hsl(var(--chart-1))',
+  				'2': 'hsl(var(--chart-2))',
+  				'3': 'hsl(var(--chart-3))',
+  				'4': 'hsl(var(--chart-4))',
+  				'5': 'hsl(var(--chart-5))'
   			}
   		},
   		boxShadow: {
@@ -228,7 +251,10 @@ module.exports = {
   		borderRadius: {
   			'tremor-small': '0.375rem',
   			'tremor-default': '0.5rem',
-  			'tremor-full': '9999px'
+  			'tremor-full': '9999px',
+  			lg: 'var(--radius)',
+  			md: 'calc(var(--radius) - 2px)',
+  			sm: 'calc(var(--radius) - 4px)'
   		},
   		fontSize: {
   			'tremor-label': [

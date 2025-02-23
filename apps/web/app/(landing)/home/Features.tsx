@@ -20,17 +20,19 @@ import Image from "next/image";
 
 export function FeaturesPrivacy() {
   return (
-    <div className="bg-white py-24 sm:py-32" id="features">
+    <div className="bg-background py-24 sm:py-32" id="features">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:text-center">
           <h2 className="font-cal text-base leading-7 text-blue-600">
             Made for Everyone
           </h2>
-          <p className="mt-2 font-cal text-3xl text-gray-900 sm:text-4xl">
-          Empowering India with AI Excellence
+          <p className="mt-2 font-cal text-3xl sm:text-4xl">
+            Empowering India with AI Excellence
           </p>
-          <p className="mt-6 text-lg leading-8 text-gray-600">
-          AI PortalX bridges the gap between AI model data and insightful content, ensuring every user finds the tools and knowledge they need to succeed in their AI endeavors.
+          <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-400">
+            AI PortalX bridges the gap between AI model data and insightful
+            content, ensuring every user finds the tools and knowledge they need
+            to succeed in their AI endeavors.
           </p>
         </div>
       </div>
@@ -51,7 +53,7 @@ export function FeaturesWithImage(props: {
   }[];
 }) {
   return (
-    <div className="overflow-hidden bg-white py-24 sm:py-32">
+    <div className="overflow-hidden bg-background py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
           <div
@@ -66,16 +68,16 @@ export function FeaturesWithImage(props: {
               <h2 className="font-cal text-base leading-7 text-blue-600">
                 {props.title}
               </h2>
-              <p className="mt-2 font-cal text-3xl text-gray-900 sm:text-4xl">
+              <p className="mt-2 font-cal text-3xl sm:text-4xl">
                 {props.subtitle}
               </p>
-              <p className="mt-6 text-lg leading-8 text-gray-600">
+              <p className="mt-6 text-lg leading-8 text-gray-700 dark:text-gray-500">
                 {props.description}
               </p>
-              <dl className="mt-10 max-w-xl space-y-8 text-base leading-7 text-gray-600 lg:max-w-none">
+              <dl className="mt-10 max-w-xl space-y-8 text-base leading-7 text-gray-600 dark:text-gray-400 lg:max-w-none">
                 {props.features.map((feature) => (
                   <div key={feature.name} className="relative pl-9">
-                    <dt className="inline font-semibold text-gray-900">
+                    <dt className="inline font-semibold text-blue-600">
                       <feature.icon
                         className="absolute left-1 top-1 h-5 w-5 text-blue-600"
                         aria-hidden="true"
@@ -162,7 +164,7 @@ export function FeaturesAutomation() {
       title={selectedVariant.title}
       subtitle={selectedVariant.subtitle}
       description="Comprehensive and Exhaustive Database of AI Models"
-      image="/images/ai-automation.png"
+      image="/herodark.png"
       features={featuresAutomations}
     />
   );
@@ -219,7 +221,7 @@ export function FeaturesColdEmailBlocker() {
       title="Tailored Results"
       subtitle={selectedVariant.subtitle}
       description={selectedVariant.description}
-      image="/images/cold-email-blocker.png"
+      image="/herodark.png"
       features={featuresColdEmailBlocker}
     />
   );
@@ -253,7 +255,7 @@ export function FeaturesStats() {
       title="Trusted Resource"
       subtitle="Trusted by Experts, Innovators, and Enthusiasts Alike"
       description="Empowering AI enthusiasts and professionals to achieve more."
-      image="/images/analytics.png"
+      image="/herolight.png"
       features={featuresStats}
     />
   );
@@ -292,8 +294,7 @@ export function FeaturesUnsubscribe() {
   > = {
     control: {
       subtitle: "Rich and Engaging AI-Focused Content",
-      description:
-        "Enhance your AI expertise and stay ahead in the field.",
+      description: "Enhance your AI expertise and stay ahead in the field.",
     },
     benefit: {
       subtitle: "No more newsletters you never read",
@@ -311,7 +312,7 @@ export function FeaturesUnsubscribe() {
       title="Stay Updated"
       subtitle={selectedVariant.subtitle}
       description={selectedVariant.description}
-      image="/images/newsletters.png"
+      image="/herolight.png"
       features={featuresUnsubscribe}
     />
   );

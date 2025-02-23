@@ -4,6 +4,8 @@ import { withAxiom } from "next-axiom";
 import nextMdx from "@next/mdx";
 import { createJiti } from "jiti";
 import withSerwistInit from "@serwist/next";
+import bundleAnalyzerPkg from "@next/bundle-analyzer";
+
 
 const jiti = createJiti(fileURLToPath(import.meta.url));
 
@@ -29,6 +31,7 @@ const nextConfig = {
   pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
   images: {
     remotePatterns: [
+      // Existing domains
       {
         protocol: "https",
         hostname: "pbs.twimg.com",
@@ -45,104 +48,28 @@ const nextConfig = {
         protocol: "https",
         hostname: "cdn.sanity.io",
       },
+      // New domains for GitHub / shields.io images
+      {
+        protocol: "https",
+        hostname: "raw.githubusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "github.com",
+      },
+      {
+        protocol: "https",
+        hostname: "img.shields.io",
+      },
+      {
+        protocol: "https",
+        hostname: "user-images.githubusercontent.com",
+      },
     ],
   },
   async redirects() {
+    // Removed all /automation + InboxZero references, kept newsletters → bulk-unsubscribe
     return [
-      {
-        source: "/",
-        destination: "/automation",
-        has: [
-          {
-            type: "cookie",
-            key: "__Secure-authjs.session-token",
-          },
-        ],
-        permanent: false,
-      },
-      {
-        source: "/",
-        destination: "/automation",
-        has: [
-          {
-            type: "cookie",
-            key: "__Secure-authjs.session-token.0",
-          },
-        ],
-        permanent: false,
-      },
-      {
-        source: "/",
-        destination: "/automation",
-        has: [
-          {
-            type: "cookie",
-            key: "__Secure-authjs.session-token.1",
-          },
-        ],
-        permanent: false,
-      },
-      {
-        source: "/",
-        destination: "/automation",
-        has: [
-          {
-            type: "cookie",
-            key: "__Secure-authjs.session-token.2",
-          },
-        ],
-        permanent: false,
-      },
-      {
-        source: "/feature-requests",
-        destination: "https://inboxzero.featurebase.app",
-        permanent: true,
-      },
-      {
-        source: "/feedback",
-        destination: "https://inboxzero.featurebase.app",
-        permanent: true,
-      },
-      {
-        source: "/roadmap",
-        destination: "https://inboxzero.featurebase.app/roadmap",
-        permanent: true,
-      },
-      {
-        source: "/changelog",
-        destination: "https://inboxzero.featurebase.app/changelog",
-        permanent: true,
-      },
-      {
-        source: "/twitter",
-        destination: "https://twitter.com/inboxzero_ai",
-        permanent: true,
-      },
-      {
-        source: "/github",
-        destination: "https://github.com/elie222/inbox-zero",
-        permanent: true,
-      },
-      {
-        source: "/discord",
-        destination: "https://discord.gg/UnBwsydrug",
-        permanent: true,
-      },
-      {
-        source: "/linkedin",
-        destination: "https://www.linkedin.com/company/inbox-zero-ai/",
-        permanent: true,
-      },
-      {
-        source: "/waitlist",
-        destination: "https://airtable.com/shr7HNx6FXaIxR5q6",
-        permanent: true,
-      },
-      {
-        source: "/affiliates",
-        destination: "https://inboxzero.lemonsqueezy.com/affiliates",
-        permanent: true,
-      },
       {
         source: "/newsletters",
         destination: "/bulk-unsubscribe",
@@ -180,8 +107,6 @@ const nextConfig = {
 const sentryOptions = {
   // For all available options, see:
   // https://github.com/getsentry/sentry-webpack-plugin#options
-
-  // Suppresses source map uploading logs during build
   silent: true,
   org: process.env.SENTRY_ORGANIZATION,
   project: process.env.SENTRY_PROJECT,
@@ -190,26 +115,11 @@ const sentryOptions = {
 const sentryConfig = {
   // For all available options, see:
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
-
-  // Upload a larger set of source maps for prettier stack traces (increases build time)
   widenClientFileUpload: true,
-
-  // Transpiles SDK to be compatible with IE11 (increases bundle size)
   transpileClientSDK: true,
-
-  // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers (increases server load)
   tunnelRoute: "/monitoring",
-
-  // Hides source maps from generated client bundles
   hideSourceMaps: true,
-
-  // Automatically tree-shake Sentry logger statements to reduce bundle size
   disableLogger: true,
-
-  // Enables automatic instrumentation of Vercel Cron Monitors.
-  // See the following for more information:
-  // https://docs.sentry.io/product/crons/
-  // https://vercel.com/docs/cron-jobs
   automaticVercelMonitors: true,
 };
 
@@ -229,4 +139,9 @@ const withSerwist = withSerwistInit({
   swDest: "public/sw.js",
 });
 
-export default withAxiom(withSerwist(exportConfig));
+const withBundleAnalyzer = bundleAnalyzerPkg({
+  enabled: process.env.ANALYZE === "true",
+});
+
+// ✅ Use `export default` instead of `module.exports`
+export default withAxiom(withSerwist(withBundleAnalyzer(exportConfig)));
