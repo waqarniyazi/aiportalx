@@ -43,7 +43,7 @@ interface PageParams {
 export default async function ModelPage({
   params,
 }: {
-  params: unknown;
+  params: PageParams;
 }): Promise<JSX.Element> {
   // Assert params is our expected object type.
   const { organization, model } = params as PageParams;
