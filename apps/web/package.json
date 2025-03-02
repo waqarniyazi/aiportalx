@@ -74,7 +74,6 @@
     "@vercel/analytics": "^1.4.1",
     "ai": "^3.4.33",
     "axios": "^1.7.9",
-    "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.3",
     "canvas-confetti": "^1.9.3",
@@ -195,10 +194,6 @@
   },
   "engines": {
     "node": ">=18.17"
-  },
-  "pnpm": {
-    "overrides": {
-      "sanity": "3.68.3"
-    }
   }
+  
 }
