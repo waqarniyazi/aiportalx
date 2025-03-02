@@ -50,9 +50,6 @@ importers:
 
   apps/backend:
     dependencies:
-      bcryptjs:
-        specifier: ^2.4.3
-        version: 2.4.3
       cookie-parser:
         specifier: ^1.4.7
         version: 1.4.7

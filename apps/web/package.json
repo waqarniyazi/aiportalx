@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "NODE_OPTIONS=--max_old_space_size=8192 prisma migrate deploy && next build",
+    "build": "NODE_OPTIONS=--max_old_space_size=8192 next build",
     "start": "next start",
     "lint": "next lint",
     "test": "vitest",
@@ -195,9 +195,6 @@
   "engines": {
     "node": ">=18.17"
   },
-  "pnpm": {
-    "overrides": {
-      "sanity": "3.68.3"
-    }
+  "pnpm": {    
   }
 }
