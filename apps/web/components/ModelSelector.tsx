@@ -19,12 +19,22 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-// Define your models with their value, label, and image path.
-const models = [
+export interface Model {
+  value: string;
+  label: string;
+  image: string;
+}
+
+const models: Model[] = [
   {
     value: "meta-llama/Llama-3.1-8B-Instruct",
     label: "Llama 3.1 8B Instruct",
     image: "/OrganizationIcons/meta-llama.png",
+  },
+  {
+    value: "deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free",
+    label: "DeepSeek-R1-Distill-Llama-70B-free",
+    image: "/OrganizationIcons/deepseek-ai.png",
   },
   {
     value: "meta-llama/Llama-3.2-3B-Instruct",
@@ -159,13 +169,15 @@ const models = [
 ];
 
 interface ModelSelectorProps {
-  value: string;
-  onSelect: (model: string) => void;
+  selectedModel: Model;
+  onSelect: (model: Model) => void;
 }
 
-export default function ModelSelector({ value, onSelect }: ModelSelectorProps) {
+export default function ModelSelector({
+  selectedModel,
+  onSelect,
+}: ModelSelectorProps) {
   const [open, setOpen] = React.useState(false);
-  const selectedModel = models.find((m) => m.value === value);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -174,7 +186,7 @@ export default function ModelSelector({ value, onSelect }: ModelSelectorProps) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[300px] justify-between"
+          className="justify-between"
         >
           {selectedModel ? (
             <div className="flex items-center gap-2">
@@ -191,7 +203,7 @@ export default function ModelSelector({ value, onSelect }: ModelSelectorProps) {
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[300px] p-0">
+      <PopoverContent className="p-0">
         <Command>
           <CommandInput placeholder="Search model..." className="h-9" />
           <CommandList>
@@ -201,8 +213,8 @@ export default function ModelSelector({ value, onSelect }: ModelSelectorProps) {
                 <CommandItem
                   key={model.value}
                   value={model.value}
-                  onSelect={(currentValue) => {
-                    onSelect(currentValue === value ? "" : currentValue);
+                  onSelect={() => {
+                    onSelect(model);
                     setOpen(false);
                   }}
                 >
@@ -215,7 +227,9 @@ export default function ModelSelector({ value, onSelect }: ModelSelectorProps) {
                   <Check
                     className={cn(
                       "ml-auto",
-                      value === model.value ? "opacity-100" : "opacity-0",
+                      selectedModel?.value === model.value
+                        ? "opacity-100"
+                        : "opacity-0",
                     )}
                   />
                 </CommandItem>
