@@ -39,13 +39,14 @@ interface PageParams {
   model: string;
 }
 
-// Workaround: we type the props inline and assert that params is of type PageParams.
+// Change the props type so that params is a Promise<PageParams>.
 export default async function ModelPage({
   params,
 }: {
-  params: { organization: string; model: string };
+  params: Promise<PageParams>;
 }): Promise<JSX.Element> {
-  const { organization, model } = params;
+  // Await the promise to get the actual params object.
+  const { organization, model } = await params;
 
   try {
     const modelData = await fetchModelData(organization, model);
