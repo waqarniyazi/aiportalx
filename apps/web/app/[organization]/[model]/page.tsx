@@ -34,13 +34,19 @@ async function fetchReadmeContent(organization: string, model: string) {
   }
 }
 
+interface PageParams {
+  organization: string;
+  model: string;
+}
+
+// Workaround: we type the props inline and assert that params is of type PageParams.
 export default async function ModelPage({
   params,
 }: {
-  params: { organization: string; model: string };
-}) {
-  // Workaround: wrap params in Promise.resolve so its type satisfies Next.js’s expectation.
-  const { organization, model } = await Promise.resolve(params);
+  params: unknown;
+}): Promise<JSX.Element> {
+  // Assert params is our expected object type.
+  const { organization, model } = params as PageParams;
 
   try {
     const modelData = await fetchModelData(organization, model);
