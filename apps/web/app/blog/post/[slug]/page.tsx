@@ -15,16 +15,20 @@ export async function generateStaticParams() {
 }
 
 type Props = {
-  params: { slug: string };
+  // Accept either an object or a thenable.
+  params: { slug: string } | Promise<{ slug: string }>;
 };
 
 export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata,
 ) {
+  // Always resolve params.
+  const { slug } = await Promise.resolve(params);
+
   const post = await sanityFetch<PostType | undefined>({
     query: postQuery,
-    params,
+    params: { slug },
   });
 
   if (!post) {
@@ -53,17 +57,19 @@ export async function generateMetadata(
   return {
     title: post.title,
     description: post.description ?? "",
-    alternates: { canonical: `/blog/post/${params.slug}` },
+    alternates: { canonical: `/blog/post/${slug}` },
     openGraph: {
       images: imageUrl ? [imageUrl, ...previousImages] : previousImages,
     },
   };
 }
 
-// Multiple versions of this page will be statically generated
-// using the `params` returned by `generateStaticParams`
-export default async function Page({ params }: Props) {
-  const post = await sanityFetch<PostType>({ query: postQuery, params });
-
+export default async function Page({ params }: Props): Promise<JSX.Element> {
+  // Await params regardless of whether it's a Promise or plain object.
+  const { slug } = await Promise.resolve(params);
+  const post = await sanityFetch<PostType>({
+    query: postQuery,
+    params: { slug },
+  });
   return <Post post={post} />;
 }
