@@ -40,10 +40,6 @@
     "@types/node": "22.8.6",
     "turbo": "^2.3.3",
     "typescript": "^5.7.2"
-  },
-  "pnpm": {
-    "overrides": {
-      "sanity": "3.68.3"
-    }
   }
+ 
 }

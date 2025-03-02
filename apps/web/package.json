@@ -193,7 +193,11 @@
     "vitest": "2.1.4"
   },
   "engines": {
-    "node": "22.14.0"
+    "node": ">=18.17"
+  },
+  "pnpm": {
+    "overrides": {
+      "sanity": "3.68.3"
+    }
   }
-  
 }
