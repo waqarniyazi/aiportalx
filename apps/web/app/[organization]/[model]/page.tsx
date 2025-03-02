@@ -39,7 +39,8 @@ export default async function ModelPage({
 }: {
   params: { organization: string; model: string };
 }) {
-  const { organization, model } = params;
+  // Workaround: wrap params in Promise.resolve so its type satisfies Next.js’s expectation.
+  const { organization, model } = await Promise.resolve(params);
 
   try {
     const modelData = await fetchModelData(organization, model);
