@@ -14,17 +14,17 @@ export async function generateStaticParams() {
   return posts;
 }
 
+// Change Props so that `params` is always a Promise.
 type Props = {
-  // Accept either an object or a thenable.
-  params: { slug: string } | Promise<{ slug: string }>;
+  params: Promise<{ slug: string }>;
 };
 
 export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata,
 ) {
-  // Always resolve params.
-  const { slug } = await Promise.resolve(params);
+  // Resolve the params promise.
+  const { slug } = await params;
 
   const post = await sanityFetch<PostType | undefined>({
     query: postQuery,
@@ -65,8 +65,8 @@ export async function generateMetadata(
 }
 
 export default async function Page({ params }: Props): Promise<JSX.Element> {
-  // Await params regardless of whether it's a Promise or plain object.
-  const { slug } = await Promise.resolve(params);
+  // Await params (which is guaranteed to be a Promise).
+  const { slug } = await params;
   const post = await sanityFetch<PostType>({
     query: postQuery,
     params: { slug },
