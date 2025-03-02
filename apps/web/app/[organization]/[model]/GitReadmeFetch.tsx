@@ -88,7 +88,7 @@ export default function GitReadmeFetch({
 
             // If the original HTML had width or height, replicate them as inline styles
             // e.g. <img width="60%" height="100" />
-            const { width, height, style } = (node.properties as any) || {};
+            const { width, height, style } = (node?.properties as any) || {};
 
             // We'll build a style object
             const styleObj: React.CSSProperties = {};
