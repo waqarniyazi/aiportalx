@@ -5,7 +5,7 @@ import ModelInfo from "./modelinfo";
 import Infosidebar from "./infosidebar";
 
 interface ModelPageProps {
-  params: { organization: string; model: string };
+  params: { organization: string; model: string } | Promise<any>;
 }
 
 async function fetchModelData(organization: string, model: string) {
