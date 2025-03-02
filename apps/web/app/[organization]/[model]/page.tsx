@@ -43,10 +43,9 @@ interface PageParams {
 export default async function ModelPage({
   params,
 }: {
-  params: PageParams;
+  params: { organization: string; model: string };
 }): Promise<JSX.Element> {
-  // Assert params is our expected object type.
-  const { organization, model } = params as PageParams;
+  const { organization, model } = params;
 
   try {
     const modelData = await fetchModelData(organization, model);
