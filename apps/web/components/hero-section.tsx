@@ -23,6 +23,7 @@ interface HeroProps {
     };
   };
   title: string;
+  herotext?: string;
   description: string;
   actions: HeroAction[];
   image: {
