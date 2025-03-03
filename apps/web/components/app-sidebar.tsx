@@ -226,10 +226,14 @@ export function AppSidebar({
               handleSearchChange(category, e.target.value as string)
             }
             options={filteredOptions.map((opt) => ({ label: opt, value: opt }))}
-            onOptionSelect={(selectedOpt) => {
-              toggleFilter(category, selectedOpt.value);
-              // Clear the search term so the input resets
-              handleSearchChange(category, "");
+            onSelect={(e) => {
+              // Extract the selected value from the event target
+              const selectedValue = (e.target as HTMLInputElement).value;
+              if (selectedValue) {
+                toggleFilter(category, selectedValue);
+                // Clear the search term so the input resets
+                handleSearchChange(category, "");
+              }
             }}
             className="mb-3"
           />

@@ -29,18 +29,20 @@ export function PostHogPageview(): JSX.Element {
 }
 
 export function PostHogIdentify(): JSX.Element {
-  const session = useSession();
+  const { data: session } = useSession();
 
   useEffect(() => {
-    if (session?.data?.user.email)
-      posthog.identify(session.data.user.email, {
-        email: session.data.user.email,
+    if (session?.user) {
+      posthog.identify(session.user.id, {
+        email: session.user.email,
       });
-  }, [session?.data?.user.email]);
+    }
+  }, [session]);
 
   return <></>;
 }
 
+// Initialize PostHog
 if (typeof window !== "undefined" && env.NEXT_PUBLIC_POSTHOG_KEY) {
   posthog.init(env.NEXT_PUBLIC_POSTHOG_KEY, {
     api_host: env.NEXT_PUBLIC_POSTHOG_API_HOST, // https://posthog.com/docs/advanced/proxy/nextjs
