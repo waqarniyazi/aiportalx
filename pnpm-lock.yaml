@@ -297,6 +297,9 @@ importers:
       '@turbo/gen':
         specifier: ^2.3.3
         version: 2.4.4(@types/node@22.8.6)(typescript@5.6.3)
+      '@types/canvas-confetti':
+        specifier: ^1.9.0
+        version: 1.9.0
       '@upstash/qstash':
         specifier: ^2.7.20
         version: 2.7.22
@@ -4435,6 +4438,9 @@ packages:
 
   '@types/body-parser@1.19.5':
     resolution: {integrity: sha512-fB3Zu92ucau0iQ0JMCFQE7b/dv8Ot07NI3KaZIkIUNXq82k4eBAqUaneXfleGY9JWskeS9y+u0nXMyspcuQrCg==}
+
+  '@types/canvas-confetti@1.9.0':
+    resolution: {integrity: sha512-aBGj/dULrimR1XDZLtG9JwxX1b4HPRF6CX9Yfwh3NvstZEm1ZL7RBnel4keCPSqs1ANRu1u2Aoz9R+VmtjYuTg==}
 
   '@types/connect@3.4.36':
     resolution: {integrity: sha512-P63Zd/JUGq+PdrM1lv0Wv5SBYeA2+CORvbrXbngriYY0jzLUWfQMQQxOhjONEz/wlHOAxOdY7CY65rgQdTjq2w==}
@@ -16419,6 +16425,8 @@ snapshots:
     dependencies:
       '@types/connect': 3.4.38
       '@types/node': 22.8.6
+
+  '@types/canvas-confetti@1.9.0': {}
 
   '@types/connect@3.4.36':
     dependencies:
