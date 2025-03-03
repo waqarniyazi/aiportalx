@@ -1,5 +1,5 @@
-import { Button } from "@/components/Button";
-import { Card } from "@/components/Card";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { PageHeading, TypographyP } from "@/components/Typography";
 
 export function ErrorPage(props: {
@@ -15,8 +15,8 @@ export function ErrorPage(props: {
           <TypographyP>{props.description}</TypographyP>
         </div>
         {props.button || (
-          <Button className="mt-4" size="xl" link={{ href: "/" }}>
-            Return Home
+          <Button className="mt-4" size="default" asChild>
+            <a href="/">Return Home</a>
           </Button>
         )}
       </Card>

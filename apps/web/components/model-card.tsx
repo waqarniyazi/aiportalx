@@ -24,6 +24,7 @@ interface Model {
   Organization: string[];
   "Country (from Organization)": string[];
   "Publication date": string;
+  "Training compute (FLOP)"?: string;
 }
 
 interface ModelCardsProps {
@@ -204,15 +205,20 @@ export default function ModelCards({ filters, sortOption }: ModelCardsProps) {
                         </span>
                         <span className="text-semibold mt-1 text-sm text-gray-500">
                           By{" "}
-                          {model.Organization.map((org) => (
-                            <a
-                              key={org}
-                              href="#"
-                              className="hover:text-blue-500"
-                            >
-                              {org}
-                            </a>
-                          )).reduce((prev, curr) => [prev, ", ", curr])}
+                          {model.Organization.length > 0
+                            ? model.Organization.map((org, index) => (
+                                <>
+                                  {index > 0 && ", "}
+                                  <a
+                                    key={org}
+                                    href="#"
+                                    className="hover:text-blue-500"
+                                  >
+                                    {org}
+                                  </a>
+                                </>
+                              ))
+                            : "Unknown"}
                           {" | "}
                           {model["Publication date"]
                             ? new Date(model["Publication date"]).getFullYear()

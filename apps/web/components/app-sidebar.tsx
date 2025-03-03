@@ -24,7 +24,11 @@ export function AppSidebar({
   onFilterChange,
 }: {
   filters: Record<string, string[]>;
-  setFilters: (newFilters: Record<string, string[]>) => void;
+  setFilters: (
+    newFilters:
+      | Record<string, string[]>
+      | ((prev: Record<string, string[]>) => Record<string, string[]>),
+  ) => void;
   onFilterChange: ({ type, value }: { type: string; value: string }) => void;
 }) {
   // Local state to hold combined filter data (fetched + predefined)
@@ -61,7 +65,7 @@ export function AppSidebar({
 
       // Find the first filter with a selected value to determine the base URL
       for (const [filterKey, filterValues] of Object.entries(updatedFilters)) {
-        if (filterValues.length > 0) {
+        if (Array.isArray(filterValues) && filterValues.length > 0) {
           baseKey = filterKey;
           baseValue = filterValues[0]
             .toLowerCase()
@@ -81,7 +85,9 @@ export function AppSidebar({
       const queryString = new URLSearchParams(
         Object.entries(updatedFilters).reduce(
           (acc, [filterKey, filterValues]) =>
-            filterKey !== baseKey && filterValues.length > 0
+            filterKey !== baseKey &&
+            Array.isArray(filterValues) &&
+            filterValues.length > 0
               ? {
                   ...acc,
                   [filterKey.toLowerCase()]: filterValues
