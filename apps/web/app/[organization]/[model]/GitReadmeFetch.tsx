@@ -172,7 +172,7 @@ export default function GitReadmeFetch({
 
           // <div align="center"> => flex layout
           div: ({ node, ...props }) => {
-            if (props.align === "center") {
+            if (node?.properties && node?.properties.align === "center") {
               return (
                 <div
                   className="flex flex-wrap items-center justify-center gap-2 text-center"
