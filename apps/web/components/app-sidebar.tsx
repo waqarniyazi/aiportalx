@@ -7,7 +7,13 @@ import {
   SidebarGroupLabel,
 } from "@/components/ui/sidebar";
 import { Badge } from "@/components/ui/badge"; // Shadcn Badge component
-import { Autocomplete, Option } from "@/components/ui/autocomplete"; // Autocomplete
+import { Autocomplete } from "@/components/ui/autocomplete"; // Autocomplete
+
+// Define Option type with the properties we need
+type Option = {
+  label: string;
+  value: string;
+};
 import {
   Grid2x2Check,
   Building2,
@@ -122,7 +128,7 @@ export function AppSidebar({
   };
 
   // Predefined local filters
-  const predefinedFilters = {
+  const predefinedFilters: Record<string, string[]> = {
     Task: [
       "Language modelling/generation",
       "Image Generation",
@@ -196,7 +202,7 @@ export function AppSidebar({
         >
           <div className="flex items-center gap-2">
             <Icon className="h-5 w-5" />
-            <SidebarGroupLabel className="text-semiblod text-sm">
+            <SidebarGroupLabel className="text-semibold text-sm">
               {label}
             </SidebarGroupLabel>
           </div>
@@ -216,9 +222,11 @@ export function AppSidebar({
           <Autocomplete
             label={`Search ${label.toLowerCase()}`}
             value={searchTerm}
-            onInputChange={(e) => handleSearchChange(category, e.target.value)}
+            onInputChange={(e) =>
+              handleSearchChange(category, e.target.value as string)
+            }
             options={filteredOptions.map((opt) => ({ label: opt, value: opt }))}
-            onOptionSelect={(selectedVal: string, selectedOpt: Option) => {
+            onOptionSelect={(selectedOpt) => {
               toggleFilter(category, selectedOpt.value);
               // Clear the search term so the input resets
               handleSearchChange(category, "");
@@ -228,7 +236,7 @@ export function AppSidebar({
 
           {/* Predefined filter badges */}
           <div className="mt-2 flex flex-wrap gap-2">
-            {predefinedFilters[category]?.map((option) => {
+            {(predefinedFilters[category] || []).map((option: string) => {
               const isSelected = filters[category]?.includes(option);
               return (
                 <Badge
