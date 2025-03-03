@@ -36,9 +36,19 @@ interface BlogPost {
   filterValue: string;
 }
 
+interface Model {
+  Model: string;
+  Domain: string[];
+  Task: string[];
+  Organization: string[];
+  "Country (from Organization)": string[];
+  "Publication date": string;
+  [key: string]: any; // Keep this to maintain flexibility for additional properties
+}
+
 export default function ModelsPage() {
-  const [models, setModels] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [models, setModels] = useState<Model[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [filters, setFilters] = useState<Record<string, string[]>>({});
   const pathname = usePathname();
   const router = useRouter();

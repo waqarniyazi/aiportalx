@@ -27,6 +27,7 @@ interface Model {
 }
 
 interface ModelCardsProps {
+  models?: Model[]; // Optional prop to pass in models directly
   filters: Record<string, string[]>;
   sortOption?: { field: string; order: "asc" | "desc" };
 }
