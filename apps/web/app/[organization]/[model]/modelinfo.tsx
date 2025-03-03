@@ -89,7 +89,7 @@ export default function ModelInfo({
           "Dataset size notes",
           "Training hardware",
           "Hardware quantity",
-        ].some((key) => modelData[key]) && (
+        ].some((key) => (modelData as Record<string, unknown>)[key]) && (
           <>
             <h2 className="font-inter mb-2 flex items-center text-tremor-large font-semibold text-gray-700">
               <img src="/cube.png" alt="Training" className="mr-2 h-6 w-6" />
