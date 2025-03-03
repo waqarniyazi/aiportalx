@@ -65,19 +65,26 @@ export function HeroSection({
 
           {/* Actions */}
           <div className="relative z-10 flex animate-appear justify-center gap-4 opacity-0 delay-300">
-            <div className="relative z-10 flex animate-appear justify-center gap-4 opacity-0 delay-300">
-              {actions.map((action, index) => (
-                <Button key={index} variant={action.variant} size="lg" asChild>
-                  <a
-                    href={action.href}
-                    className="flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-500 to-blue-700 px-4 py-2 text-white transition-all hover:from-blue-600 hover:to-blue-800"
-                  >
-                    {action.icon}
-                    {action.text}
-                  </a>
-                </Button>
-              ))}
-            </div>
+            {actions.map((action, index) => (
+              <Button
+                key={index}
+                variant={action.variant === "glow" ? "default" : "outline"}
+                size="lg"
+                asChild
+              >
+                <a
+                  href={action.href}
+                  className={cn(
+                    "flex items-center gap-2",
+                    action.variant === "glow" &&
+                      "bg-gradient-to-r from-blue-500 to-blue-700 text-white hover:from-blue-600 hover:to-blue-800",
+                  )}
+                >
+                  {action.icon}
+                  {action.text}
+                </a>
+              </Button>
+            ))}
           </div>
 
           {/* Image with Glow */}
