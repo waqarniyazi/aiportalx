@@ -54,6 +54,7 @@ type ModelData = {
   "Training code accessibility"?: string;
   "Parameters notes"?: string;
   Authors?: string[];
+  [key: string]: any;
 };
 
 const ComparePage = () => {
@@ -226,7 +227,9 @@ const ComparePage = () => {
                               {row.label}
                             </TableCell>
                             <TableCell className="px-4 py-2">
-                              {Array.isArray(models[0][row.field])
+                              {Array.isArray(
+                                models[0][row.field as keyof ModelData],
+                              )
                                 ? (models[0][row.field] as string[]).join(", ")
                                 : models[0][row.field] || "-"}
                             </TableCell>

@@ -26,7 +26,9 @@ export default function DeploymentPage() {
     image: "/OrganizationIcons/deepseek-ai.png",
   };
 
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<
+    { id: string; role: string; content: string }[]
+  >([]);
   const [input, setInput] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedModel, setSelectedModel] = useState<Model>(defaultModel);
@@ -35,9 +37,9 @@ export default function DeploymentPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Access Clerk user data and updater
-  const { user, setPublicMetadata } = useUser();
-  const usageCount = user?.publicMetadata.usageCount || 0;
+  // Access Clerk user data
+  const { user } = useUser();
+  const usageCount = Number(user?.publicMetadata.usageCount) || 0;
   const isUpgraded = user?.publicMetadata.isUpgraded || false;
 
   // Listen for window resize to set mobile state
@@ -58,7 +60,9 @@ export default function DeploymentPage() {
     event?: { preventDefault?: () => void },
     options?: { experimental_attachments?: FileList },
   ) => {
-    event?.preventDefault();
+    if (event && event.preventDefault) {
+      event.preventDefault();
+    }
 
     if (!isUpgraded && usageCount >= 3) {
       setShowUpgradeDialog(true);
@@ -94,7 +98,8 @@ export default function DeploymentPage() {
       setMessages([...newMessages, assistantMessage]);
 
       if (!isUpgraded) {
-        setPublicMetadata({ usageCount: usageCount + 1 });
+        // TODO: Implement metadata update if needed using Clerk's backend API
+        console.warn("User metadata update not implemented.");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -182,13 +187,16 @@ export default function DeploymentPage() {
                 handleInputChange={(e) => setInput(e.target.value)}
                 handleSubmit={handleSubmit}
                 isGenerating={isGenerating}
-                selectedModelLabel={selectedModel.label}
-                selectedModelImage={selectedModel.image}
                 suggestions={[
                   "What is the weather in Tokyo?",
                   "Tell me about AI inference.",
                 ]}
-                append={(msg) => setMessages([...messages, msg])}
+                append={(message: { role: "user"; content: string }) =>
+                  setMessages([
+                    ...messages,
+                    { id: Date.now().toString(), ...message },
+                  ])
+                }
               />
             </div>
 

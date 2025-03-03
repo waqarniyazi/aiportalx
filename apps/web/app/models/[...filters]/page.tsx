@@ -37,12 +37,12 @@ interface BlogPost {
 }
 
 export default function ModelsPage() {
-  const [models, setModels] = useState([]);
+  const [models, setModels] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filters, setFilters] = useState<Record<string, string[]>>({});
   const pathname = usePathname();
   const router = useRouter();
-  const [blogPosts, setBlogPosts] = useState([]); // For blog posts
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]); // For blog posts
   const [sortOption, setSortOption] = useState<{
     field: string;
     order: "asc" | "desc";
@@ -116,7 +116,7 @@ export default function ModelsPage() {
             default:
               query = postsQuery;
           }
-          const posts = await sanityFetch<{ title: string }[]>({
+          const posts = await sanityFetch<BlogPost[]>({
             query,
             params: { filterValue: decodeURIComponent(filterVal) },
           });

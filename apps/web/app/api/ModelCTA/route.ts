@@ -77,7 +77,7 @@ export async function POST(request: Request) {
       { message: "Data saved successfully!" },
       { status: 200 },
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error saving data:", error);
     return NextResponse.json(
       { message: "Failed to save data!", error: error.message },

@@ -7,7 +7,9 @@ export async function POST(req: Request) {
     const { messages, model } = await req.json();
 
     // Create an instance of Together using your API key
-    const together = new Together(process.env.TOGETHER_API_KEY || "");
+    const together = new Together({
+      apiKey: process.env.TOGETHER_API_KEY || "",
+    });
 
     // Call the together.ai chat completions API using streaming.
     // (Adjust parameters as desired; note that "stream: true" returns an async iterable.)

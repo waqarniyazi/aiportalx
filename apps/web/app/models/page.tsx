@@ -37,12 +37,12 @@ interface BlogPost {
 }
 
 export default function ModelsPage() {
-  const [models, setModels] = useState([]);
+  const [models, setModels] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filters, setFilters] = useState<Record<string, string[]>>({});
   const pathname = usePathname();
   const router = useRouter();
-  const [blogPosts, setBlogPosts] = useState([]); // For blog posts
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]); // For blog posts
   const [sortOption, setSortOption] = useState<{
     field: string;
     order: "asc" | "desc";
@@ -116,7 +116,7 @@ export default function ModelsPage() {
             default:
               query = postsQuery;
           }
-          const posts = await sanityFetch<{ title: string }[]>({
+          const posts = await sanityFetch<BlogPost[]>({
             query,
             params: { filterValue: decodeURIComponent(filterVal) },
           });
@@ -167,7 +167,7 @@ export default function ModelsPage() {
         onFilterChange={updateFilter}
       />
       <SidebarInset>
-        <header className="sticky top-[var(--header-height)] z-50 mb-[25px] flex w-full items-center justify-between bg-background px-4 py-2">
+        <header className="sticky top-[var(--header-height)] z-50 mb-[30px] flex w-full items-center justify-between bg-background px-4 py-[1px] pt-[1px] shadow-sm">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />

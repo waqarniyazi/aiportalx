@@ -15,7 +15,9 @@ export async function POST(request: Request) {
     }
 
     // Update the user's public metadata to set isUpgraded to true (or the value passed)
-    await clerkClient.users.updateUserMetadata(userId, {
+    await (
+      await clerkClient()
+    ).users.updateUserMetadata(userId, {
       publicMetadata: { isUpgraded: upgrade },
     });
 

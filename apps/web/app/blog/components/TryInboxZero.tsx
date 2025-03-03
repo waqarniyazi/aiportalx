@@ -18,10 +18,11 @@ export function TryInboxZero() {
           className="w-full rounded-t-lg shadow"
         />
         <p className="p-4 text-gray-700">
-          Get 4,00,000+ AI Models from all domains in one place. Filter them according to your needs and try them in our dedicated playground. 
+          Get 4,00,000+ AI Models from all domains in one place. Filter them
+          according to your needs and try them in our dedicated playground.
         </p>
         <div className="px-4 pb-4">
-          <Button className="w-full" variant="blue">
+          <Button className="w-full" variant="default">
             Check all AI Models
           </Button>
         </div>
